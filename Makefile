@@ -21,21 +21,12 @@ SRC_FILES	=			\
 	ocl/ocl_error.c  	\
 	ocl/ocl_init.c  	\
 	ocl/ocl_program.c  	\
-	ocl/ocl_utils.c		\
-	cgmath/mat4.c  		\
-	cgmath/mat4_op.c  	\
-	cgmath/mat4_rts.c  	\
-	cgmath/mat4_transform.c  \
-	cgmath/mat4_utils.c \
-	cgmath/vec3.c  		\
-	cgmath/vec3_op.c
-
+	ocl/ocl_utils.c
 
 HDR_FILES	=			\
 	fractol.h 			\
 	keys.h 				\
-	ocl.h				\
-	cgmath.h
+	ocl.h
 
 
 DIR_SRC		=	./src
@@ -69,7 +60,6 @@ all: $(NAME)
 $(DIR_OBJ):
 	@mkdir $(DIR_OBJ)
 	@mkdir $(DIR_OBJ)/ocl
-	@mkdir $(DIR_OBJ)/cgmath
 
 $(NAME): $(SDL_DIST)  $(DIR_OBJ) $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME) $(SDL_LINK)
