@@ -13,8 +13,8 @@
 # include "libft.h"
 
 cl_device_id	ocl_create_device();
-cl_program		ocl_compile_program(cl_context ctx, cl_device_id device_id,
-	  	const char **file_names, size_t count);
+cl_program		ocl_create_program(cl_context ctx, const char **file_names, size_t count);
+
 typedef struct	s_ocl
 {
 	cl_device_id		device;

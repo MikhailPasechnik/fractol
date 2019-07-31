@@ -65,8 +65,7 @@ static int		read_files(const char **file_names, size_t count,
 	return (i == count);
 }
 
-cl_program		ocl_compile_program(cl_context ctx, cl_device_id device_id,
-		const char **file_names, size_t count)
+cl_program		ocl_create_program(cl_context ctx, const char **file_names, size_t count)
 {
 	cl_program	program;
 	char 		**content;
@@ -75,17 +74,11 @@ cl_program		ocl_compile_program(cl_context ctx, cl_device_id device_id,
 
 	if (!(read_files(file_names, count, &content, &size)))
 		return (NULL);
-	program = clCreateProgramWithSource(ctx, 1, (const char **)content, size, &err);
+	program = clCreateProgramWithSource(ctx, count, (const char **)content, size, &err);
 	while (count--)
 		free(content[count]);
 	free(size);
 	if (OCL_ERROR(err, "Couldn't create the program"))
 		return (NULL);
-	err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
-	if (OCL_ERROR(err, "Failed to build program"))
-	{
-		ocl_log_program_build(program, device_id, 2);
-		return (NULL);
-	}
 	return (program);
 }
