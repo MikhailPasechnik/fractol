@@ -14,62 +14,78 @@ static int 		open_file_fd(const char *file_name)
 	return (fd);
 }
 
-static char 	*read_file(const char *file_name)
+static char 	*read_file(const char *file_name, size_t *size)
 {
 	int		fd;
 	int		rd;
 	char 	buff[1024 + 1];
-	char 	*res;
-	char 	*tmp;
+	char 	*str;
+	char 	*joined;
 
 	if (!(fd = open_file_fd(file_name)))
-	{
-		ft_putendl_fd("Failed to read file", 2);
 		return (NULL);
-	}
-	if ((res = ft_strnew(0)) == NULL)
-	{
-		close(fd);
-		return (NULL);
-	}
+	*size = 0;
+	str = NULL;
 	while ((rd = read(fd, buff, 1024)))
 	{
+		*size += rd;
 		buff[rd] = '\0';
-		tmp = ft_strjoin(res, buff);
-		ft_strdel(&res);
-		if ((res = tmp) == NULL)
-		{
-			close(fd);
-			return (NULL);
-		}
+		joined = ft_strjoin(str ? str : "", buff);
+		if (str)
+			ft_strdel(&str);
+		if ((str = joined) == NULL)
+			break ;
 	}
 	close(fd);
-	return (res);
+	return (str);
+}
+
+static int		read_files(const char **file_names, size_t count,
+		char ***content, size_t **size)
+{
+	size_t	i;
+
+	if (!content || !size || !(*content = malloc(sizeof(**content) * count)) ||
+		!(*size = malloc(sizeof(**size) * count)))
+		return (0);
+
+	i = 0;
+	while (i < count)
+	{
+		if (((*content)[i] = read_file(file_names[i], &(*size)[i])) == NULL)
+		{
+			ft_putstr_fd("Failed to read file: ", 2);
+			ft_putendl_fd(file_names[i], 2);
+			while(i--)
+				free((*content)[i]);
+			break ;
+		}
+		i++;
+	}
+	return (i == count);
 }
 
 cl_program		ocl_compile_program(cl_context ctx, cl_device_id device_id,
-									  const char *file_name, int build_log)
+		const char **file_names, size_t count)
 {
 	cl_program	program;
-	char 		*buff;
-	char 		*log;
+	char 		**content;
 	cl_int		err;
-	size_t 		size;
+	size_t 		*size;
 
-	if (!(buff = read_file(file_name)))
+	if (!(read_files(file_names, count, &content, &size)))
 		return (NULL);
-	size = ft_strlen(buff);
-	program = clCreateProgramWithSource(ctx, 1, (const char **)&buff, &size, &err);
-	ft_strdel(&buff);
+	program = clCreateProgramWithSource(ctx, 1, (const char **)content, size, &err);
+	while (count--)
+		free(content[count]);
+	free(size);
 	if (OCL_ERROR(err, "Couldn't create the program"))
 		return (NULL);
 	err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
 	if (OCL_ERROR(err, "Failed to build program"))
 	{
-		(log = ocl_get_build_log(program, device_id)) ? ft_putendl_fd(log, 2) : 0;
-		log ? ft_strdel(&log): 0;
+		ocl_log_program_build(program, device_id, 2);
 		return (NULL);
 	}
-	build_log ? ocl_log_program_build(program, device_id) : 0;
 	return (program);
 }

@@ -20,14 +20,14 @@ char	*ocl_get_build_log(cl_program program, cl_device_id device_id)
 	return (log);
 }
 
-void	ocl_log_program_build(cl_program program, cl_device_id device_id)
+void	ocl_log_program_build(cl_program program, cl_device_id device_id, int fd)
 {
 	char *log;
 
 	log = ocl_get_build_log(program, device_id);
 	if (log)
 	{
-		ft_putendl(log);
+		ft_putendl_fd(log, fd);
 		ft_strdel(&log);
 	}
 }
