@@ -21,20 +21,38 @@
 # include "ocl.h"
 # include "SDL.h"
 
-
 # define SCREEN_WIDTH 500
 # define SCREEN_HEIGHT 300
+# define MAX_VIEW 15
+
+
+typedef struct	s_view t_view;
+
+typedef struct  s_frender
+{
+    cl_kernel   kernel;
+    cl_float    c_x;
+    cl_float    c_y;
+    cl_float    zoom;
+    cl_float    offset_x;
+    cl_float    offset_y;
+    cl_int      width;
+    cl_int      height;
+    cl_float    iterations;
+}               t_frender;
 
 typedef struct	s_view
 {
 	SDL_Window	*win;
+	void		(*on_event)(SDL_Event *event, t_view *view);
 }				t_view;
 
 
 typedef struct	s_app
 {
 	t_ocl		ocl;
-
+	t_view		*views[MAX_VIEW];
+	size_t 		view_count;
 }				t_app;
 
 #endif
