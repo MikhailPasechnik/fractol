@@ -1,37 +1,38 @@
-#pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable
+#include "complex.h"
+#include "utils.h"
 
 __kernel void julia(
-		const float c_x,    /// -0.7
-		const float c_y,    /// 0.27015
 		const float zoom,
+		const float mouse_x,
+		const float mouse_y,
 		const float offset_x,
 		const float offset_y,
-		const int 	width,
-		const int 	height,
-		const int 	iterations,
-		__global int *result
+		const int   width,
+		const int   height,
+		const int   iterations,
+		__global int         *result
 )
 {
-	float	tmp;
-	int		id;
-	int		i;
-	int		x;
-	int		y;
-	float 	zx;
-	float	zy;
+	int 		id;
+	int 		x;
+	int 		y;
+	int 		i;
+	t_complex 	c;
+	t_complex 	z;
 
-	i = 0;
 	id = get_global_id(0);
 	x = id % width;
 	y = id / width;
-	zx = 1.5 * (x - width / 2) / (0.5 * zoom * width) + offset_x;
-	zy = 1.0 * (y - height / 2) / (0.5 * zoom * height) + offset_y;
-	while (pow(zx, 2) + pow(zy, 2) < 4 && i < iterations)
+	i = 0;
+	c = (t_complex){mouse_x, mouse_y};
+	z = (t_complex){
+			1.5 * (x - width  / 2) / (0.5 * zoom * width)  + offset_x,
+			1 * (y - height / 2) / (0.5 * zoom * height) + offset_y
+	};
+	while (c_abs(z).r <= 2 && i < iterations)
 	{
-		tmp = pow(zx, 2) - pow(zy, 2) + c_x;
-		zy = 2.0 * zx * zy + c_y;
-		zx = tmp;
+		z = c_add(c_mul(z, z), c);
 		i++;
 	}
-	result[id] = i;
+	result[id] = iteration_to_color(i, iterations);
 }

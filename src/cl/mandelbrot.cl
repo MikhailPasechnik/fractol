@@ -1,6 +1,10 @@
-#pragma OPENCL EXTENSION cl_khr_byte_addressable_store : enable
+#include "complex.h"
+#include "utils.h"
+
 __kernel void mandelbrot(
 		const float zoom,
+		const float mouse_x,
+		const float mouse_y,
 		const float offset_x,
 		const float offset_y,
 		const int   width,
@@ -9,30 +13,26 @@ __kernel void mandelbrot(
 		__global int         *result
 )
 {
-	float	tmp;
-	int		id;
-	int		i;
-	int		x;
-	int		y;
-	float 	zx;
-	float	zy;
-	float 	zx_start;
-	float 	zy_start;
+	int 		id;
+	int 		x;
+	int 		y;
+	int 		i;
+	t_complex 	c;
+	t_complex 	z;
 
-	i = 0;
 	id = get_global_id(0);
 	x = id % width;
 	y = id / width;
-	zx_start = 1.5 * (x - width  / 2) / (0.5 * zoom * width)  + offset_x;
-	zy_start = 1.0 * (y - height / 2) / (0.5 * zoom * height) + offset_y;
-	zx = zx_start;
-	zy = zy_start;
-	while (pow(zx, 2) + pow(zy, 2) < 4 && i < iterations)
+	i = 0;
+	c = (t_complex){
+		1.5 * (x - width  / 2) / (0.5 * zoom * width)  + offset_x,
+		1 * (y - height / 2) / (0.5 * zoom * height) + offset_y
+	};
+	z = c;
+	while (c_abs(z).r <= 2 && i < iterations)
 	{
-		tmp = pow(zx, 2) - pow(zy, 2) + zx_start;
-		zy = 2.0 * zx * zy + zy_start;
-		zx = tmp;
+		z = c_add(c_mul(z, z), c);
 		i++;
 	}
-	result[id] = i;
+	result[id] = iteration_to_color(i, iterations);
 }
