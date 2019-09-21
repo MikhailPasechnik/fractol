@@ -1,6 +1,6 @@
 #include "complex.h"
 
-__kernel void	test_complex()
+__kernel void	test_complex(void)
 {
 	t_complex a;
 	t_complex b;
