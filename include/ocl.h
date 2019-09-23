@@ -19,7 +19,6 @@ typedef struct	s_ocl
 {
 	cl_device_id		device;
 	cl_context			context;
-	cl_command_queue	queue;
 }				t_ocl;
 
 int				ocl_init(t_ocl *cl);
