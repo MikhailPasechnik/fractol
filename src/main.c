@@ -24,69 +24,15 @@ int sdl_init()
 	return (1);
 }
 
-t_view *get_view_from_winid(Uint32 id, t_app *app)
-{
-	int i;
-	t_view *v;
-
-	i = 0;
-	while (i < MAX_VIEW)
-	{
-		v = app->views[i];
-		if (v != NULL && SDL_GetWindowID(v->win) == id)
-			return (v);
-		i++;
-	}
-	return (NULL);
-}
-
-
-t_view *open_view(unsigned int w, unsigned int h, const char *name, t_app *app)
-{
-	t_view *v;
-	int i;
-
-	if (app->view_count >= MAX_VIEW)
-		return (NULL);
-	if (!(v = ft_memalloc(sizeof(*v))))
-		return (NULL);
-	if (!(v->win = SDL_CreateWindow(name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-									w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)))
-	{
-		ft_putendl_fd("Window could not be created! SDL_Error: ", 2);
-		ft_putendl_fd(SDL_GetError(), 2);
-		free(v);
-		return (NULL);
-	}
-	app->view_count++;
-
-	i = -1;
-	while (++i < MAX_VIEW)
-		if (!app->views[i])
-		{
-			app->views[i] = v;
-			break;
-		}
-	return (v);
-}
-
 void sdl_loop(t_app *app)
 {
 	SDL_Event event;
-	t_view *view;
 
-	int quit = 0;
-	while (!quit)
-	{
-		while (SDL_PollEvent(&event))
-		{
-			if (event.type == SDL_WINDOWEVENT && (view = get_view_from_winid(
-					event.window.windowID, app)))
-				view->on_event ? view->on_event(&event, view) : 0;
-		}
-		if (!app->view_count)
-			quit = 1;
-	}
+    while (SDL_PollEvent(&event) && event.type != SDL_QUIT)
+    {
+        if (event.type == SDL_WINDOWEVENT && SDL_GetWindowID(app->win) == event.window.windowID)
+            on_app_event(app, &event);
+    }
 }
 
 int _main(int argc, char **argv)
@@ -97,8 +43,8 @@ int _main(int argc, char **argv)
 	SDL_Window *window = NULL;
 	//Create window
 	if ((window = SDL_CreateWindow("SDL Tutorial",
-								   SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-								   SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)) == NULL)
+								   SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIN_WIDTH,
+								   WIN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)) == NULL)
 	{
 		ft_putendl_fd("Window could not be created! SDL_Error: ", 2);
 		ft_putendl_fd(SDL_GetError(), 2);
@@ -121,7 +67,7 @@ int _main(int argc, char **argv)
 	fmt = screenSurface->format;
 	i = 0;
 	Uint32 *pixels = ((Uint32 *) screenSurface->pixels);
-	while (i < SCREEN_HEIGHT * SCREEN_WIDTH / 2)
+	while (i < WIN_HEIGHT * WIN_WIDTH / 2)
 	{
 		pixels[i] = SDL_MapRGBA(fmt, 0, 0, 255, 255);
 		i++;
@@ -129,7 +75,7 @@ int _main(int argc, char **argv)
 	SDL_UpdateWindowSurface(window);
 	SDL_Delay(2000);
 	i = 0;
-	while (i < SCREEN_HEIGHT * SCREEN_WIDTH)
+	while (i < WIN_HEIGHT * WIN_WIDTH)
 	{
 		pixels[i] = SDL_MapRGBA(fmt, 255, 0, 255, 255);
 		i++;
@@ -175,107 +121,123 @@ int _main(int argc, char **argv)
 	return (0);
 }
 
-#include <complex.h>
-#include <assert.h>
-#include <math.h>
-
-typedef struct s_complex
+size_t tab_len(const char **tab)
 {
-	cl_float r;
-	cl_float i;
+    size_t len;
 
-} t_complex;
-
-t_complex c_add(t_complex a, t_complex b);
-
-t_complex c_sub(t_complex a, t_complex b);
-
-t_complex c_mul(t_complex a, t_complex b);
-
-t_complex c_div(t_complex a, t_complex b);
-
-t_complex c_abs(t_complex a);
-
-inline t_complex c_add(t_complex a, t_complex b)
-{
-	return ((t_complex) {a.r + b.r, a.i + b.i});
+    len = 0;
+    while (tab && tab[len])
+    {
+        len++;
+    }
+    return (len);
 }
 
-inline t_complex c_sub(t_complex a, t_complex b)
+static void    internal_pick_fractal(const char *name, const char *src, t_renderer *ren)
 {
-	return ((t_complex) {a.r - b.r, a.i - b.i});
+    ren->kernel_name = ft_strnew(ft_strlen(name));
+    ren->src = ft_strsplit(src, ' ');
+    ren->src_count = tab_len((const char **)ren->src);
 }
 
-inline t_complex c_mul(t_complex a, t_complex b)
+static int     pick_fractal(const char *name, t_renderer *ren)
 {
-	return ((t_complex) {a.r * b.r - a.i * b.i, a.r * b.i + a.i * b.r});
+    if (ft_strcmp(name, MANDELBROT) == 0)
+        internal_pick_fractal(MANDELBROT, MANDELBROT_SRC, ren);
+    else if (ft_strcmp(name, JULIA) == 0)
+        internal_pick_fractal(JULIA, JULIA_SRC, ren);
+    else
+        return (0);
+    return (ren->kernel_name && ren->src && ren->src_count);
 }
 
-inline t_complex c_div(t_complex a, t_complex b)
+int     new_renderer(
+            const char *name,
+            t_renderer *ren,
+            cl_device_id device,
+            cl_context context
+        )
 {
-	return (t_complex) {
-		(a.r * b.r + a.i * b.i) / (b.r * b.r + b.i * b.i),
-		(a.i * b.r - a.r * b.i) / (b.r * b.r + b.i * b.i)
-	};
+    int err;
+
+    if (!pick_fractal(name, ren))
+    {
+        ft_putendl_fd("Failed to pick fractal", 2);
+        return (0);
+    }
+    ren->program = ocl_create_program(context, (const char **)ren->src, ren->src_count);
+    if (!ren->program || OCL_ERROR(clBuildProgram(ren->program, 0, NULL, "-I./src/cl", NULL, NULL),
+            "Failed to build program"))
+        return (0);
+    ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);
+    if (OCL_ERROR(err, "Failed to create kernel"))
+        return (0);
+    ren->queue = clCreateCommandQueue(context, device, NULL, &err);
+    if (OCL_ERROR(err, "Failed to create queue"))
+        return (0);
+    return (1);
 }
 
-inline t_complex c_abs(t_complex a)
+void    delete_renderer(t_renderer *ren)
 {
-	return ((t_complex) {hypot(a.r, a.i), 0});
+    ren->queue ? clReleaseCommandQueue(ren->queue) : 0;
+    ren->kernel ? clReleaseKernel(ren->kernel) : 0;
+    ren->program ? clReleaseProgram(ren->program) : 0;
+    ren->kernel_name ? ft_strdel(&ren->kernel_name) : 0;
+    while (ren->src_count--)
+        ft_strdel(&ren->src[ren->src_count]);
+    ren->src ? ft_memdel((void **)&ren->src) : 0;
 }
 
-
-int test_complex_cl()
+int    app_start(t_app *app, const char *fractal_name)
 {
-	double complex aa = 10 + 2 * I;
-	double complex bb = -3 - 10 * I;
-	double complex cc;
+    ft_bzero(app, sizeof(t_app));
+    if (!(app->win = SDL_CreateWindow(
+    fractal_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+    WIN_WIDTH, WIN_HEIGHT, WIN_FLAGS)))
+    {
+        ft_putendl_fd("Window could not be created! SDL_Error: ", 2);
+        ft_putendl_fd(SDL_GetError(), 2);
+        return (0);
+    }
+    if (!(ocl_init(&app->ocl)))
+    {
+        ft_putendl_fd("Failed to initialise OpenCL", 2);
+        return (0);
+    }
+    if (!new_renderer(fractal_name, &app->ren, app->ocl.device, app->ocl.context))
+    {
+        ft_putendl_fd("Failed to create renderer", 2);
+        return (0);
+    }
+    return (1);
+}
 
-	cc = aa + bb;
-	printf("(%f %f) + (%f %f) = (%f %f)\n",
-		   creal(aa), cimag(aa), creal(bb), cimag(bb), creal(cc), cimag(cc));
-
-	printf("abs((%f %f)) = (%f %f)\n", creal(cc), cimag(cc), creal(cabs(cc)), cimag(cabs(cc)));
-
-	cc = aa - bb;
-	printf("(%f %f) - (%f %f) = (%f %f)\n",
-		   creal(aa), cimag(aa), creal(bb), cimag(bb), creal(cc), cimag(cc));
-
-	cc = aa / bb;
-	printf("(%f %f) / (%f %f) = (%f %f)\n",
-		   creal(aa), cimag(aa), creal(bb), cimag(bb), creal(cc), cimag(cc));
-
-	cc = aa * bb;
-	printf("(%f %f) * (%f %f) = (%f %f)\n\n\n",
-			creal(aa), cimag(aa), creal(bb), cimag(bb), creal(cc), cimag(cc));
-
-
-	t_ocl		ocl;
-	cl_program	program;
-	cl_kernel 	kernel;
-	int			err;
-	size_t 		global;
-
-	ocl_init(&ocl);
-	char	*src[20] = {
-			"src/cl/complex.c",
-			"src/cl/test_complex.c",
-	};
-	program = ocl_create_program(ocl.context, (const char **)src, 2);
-	if (!program  || OCL_ERROR2(clBuildProgram(program, 0, NULL, "-I./src/cl", NULL, NULL)))
-		exit(1);
-	kernel = clCreateKernel(program, "test_complex", &err);
-	if (OCL_ERROR2(err))
-		exit(1);
-	global = 1;
-	if (OCL_ERROR2(clEnqueueNDRangeKernel(ocl.queue, kernel, 1u, NULL, &global, NULL, 0, NULL, NULL)))
-		exit(1);
-	clFinish(ocl.queue);
-	return (0);
+void    app_finish(t_app *app)
+{
+    app->win ? SDL_DestroyWindow(app->win) : 0;
+    delete_renderer(&app->ren);
+    ocl_release(&app->ocl);
+}
+void    on_app_event(t_app *app, SDL_Event *event)
+{
 }
 
 int main(int argc, char **argv)
 {
-	test_complex_cl();
+    t_app app;
+
+    if (argc < 2 || argc > 2)
+        ft_putendl(USAGE);
+    else if (ft_strcmp(argv[1], HELP_ARG) == 0)
+        ft_putendl(HELP);
+    else
+    {
+        !sdl_init() ? exit(1) : 0;
+        app_start(&app, argv[1]);
+        sdl_loop(&app);
+        app_finish(&app);
+        SDL_Quit();
+    }
 	return (0);
 }
