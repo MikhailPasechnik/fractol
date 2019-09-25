@@ -36,51 +36,48 @@
 # define MANDELBROT_SRC SRC" src/cl/"MANDELBROT".c"
 # define JULIA_SRC SRC" src/cl/"JULIA".c"
 
-typedef struct  s_renderer
+typedef struct	s_renderer
 {
-	cl_kernel           kernel;
-	cl_program	        program;
-	cl_command_queue    queue;
+	cl_kernel			kernel;
+	cl_program			program;
+	cl_command_queue	queue;
 
-	char          *kernel_name;
-	char                **src;
-	size_t              src_count;
+	char				*kernel_name;
+	char				**src;
+	size_t				src_count;
 
-	cl_float            zoom;
-	cl_float            mouse_x;
-	cl_float            mouse_y;
-	cl_float            offset_x;
-	cl_float            offset_y;
-	cl_int              width;
-	cl_int              height;
-	cl_float            iterations;
+	cl_float			zoom;
+	cl_float			mouse_x;
+	cl_float			mouse_y;
+	cl_float			offset_x;
+	cl_float			offset_y;
+	cl_int				width;
+	cl_int				height;
+	cl_float			iterations;
 }               t_renderer;
 
 typedef struct	s_app
 {
-	SDL_Window	        *win;
-	t_renderer          ren;
-	t_ocl		        ocl;
+	SDL_Window			*win;
+	t_renderer			ren;
+	t_ocl				ocl;
 }				t_app;
 
 /*
 ** App functions
 */
-int     app_start(t_app *app, const char *fractal_name);
-void    app_finish(t_app *app);
-void    on_app_event(t_app *app, SDL_Event *event);
+int				app_start(t_app *app, const char *fractal_name);
+void			app_finish(t_app *app);
+void			on_app_event(t_app *app, SDL_Event *event);
 
 
 /*
 ** Render functions
 */
-int     new_renderer(
-		const char *name,
-		t_renderer *ren,
-		cl_device_id device,
-		cl_context context
-);
-void    delete_renderer(t_renderer *ren);
+int				new_renderer(
+	const char *name, t_renderer *ren,
+	cl_device_id device, cl_context context);
+void			delete_renderer(t_renderer *ren);
 
 
 /*
