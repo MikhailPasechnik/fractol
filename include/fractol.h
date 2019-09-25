@@ -30,9 +30,11 @@
 # define HELP "./fractol mandelbrot | julia"
 
 # define MANDELBROT "mandelbrot"
-# define MANDELBROT_SRC "src/cl/complex.c src/cl/"MANDELBROT".c"
 # define JULIA "julia"
-# define JULIA_SRC "src/cl/complex.c src/cl/"JULIA".c"
+
+# define SRC "src/cl/complex.c src/cl/utils.c"
+# define MANDELBROT_SRC SRC" src/cl/"MANDELBROT".c"
+# define JULIA_SRC SRC" src/cl/"JULIA".c"
 
 typedef struct  s_renderer
 {
@@ -79,5 +81,13 @@ int     new_renderer(
 		cl_context context
 );
 void    delete_renderer(t_renderer *ren);
+
+
+/*
+** Utils functions
+*/
+size_t			tab_len(const char **tab);
+int				pick_fractal(const char *name, t_renderer *ren);
+
 
 #endif
