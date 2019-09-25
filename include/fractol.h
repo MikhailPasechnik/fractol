@@ -53,12 +53,19 @@ typedef struct	s_renderer
 	cl_float			offset_y;
 	cl_int				width;
 	cl_int				height;
-	cl_float			iterations;
+	cl_int				iterations;
+
+	cl_mem				out;
+	int					out_w;
+	int					out_h;
 }               t_renderer;
 
 typedef struct	s_app
 {
 	SDL_Window			*win;
+	int					win_w;
+	int					win_h;
+
 	t_renderer			ren;
 	t_ocl				ocl;
 }				t_app;
@@ -74,10 +81,9 @@ void			on_app_event(t_app *app, SDL_Event *event);
 /*
 ** Render functions
 */
-int				new_renderer(
-	const char *name, t_renderer *ren,
-	cl_device_id device, cl_context context);
+int				new_renderer(const char *name, t_app *app);
 void			delete_renderer(t_renderer *ren);
+void			render(t_app *app);
 
 
 /*

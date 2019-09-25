@@ -23,12 +23,13 @@ int		app_start(t_app *app, const char *fractal_name)
 		ft_putendl_fd(SDL_GetError(), 2);
 		return (0);
 	}
+	SDL_GetWindowSize(app->win, &app->win_w, &app->win_w);
 	if (!(ocl_init(&app->ocl)))
 	{
 		ft_putendl_fd("Failed to initialise OpenCL", 2);
 		return (0);
 	}
-	if (!new_renderer(fractal_name, &app->ren, app->ocl.device, app->ocl.context))
+	if (!new_renderer(fractal_name, app))
 	{
 		ft_putendl_fd("Failed to create renderer", 2);
 		return (0);
@@ -44,4 +45,6 @@ void	app_finish(t_app *app)
 }
 void	on_app_event(t_app *app, SDL_Event *event)
 {
+	if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+		SDL_GetWindowSize(app->win, &app->win_w, &app->win_w);
 }
