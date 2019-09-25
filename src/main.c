@@ -234,9 +234,13 @@ int main(int argc, char **argv)
 	else
 	{
 		!sdl_init() ? exit(1) : 0;
-		app_start(&app, argv[1]);
-		sdl_loop(&app);
-		app_finish(&app);
+		if (!app_start(&app, argv[1]))
+			app_finish(&app);
+		else
+		{
+			sdl_loop(&app);
+			app_finish(&app);
+		}
 		SDL_Quit();
 	}
 	return (0);
