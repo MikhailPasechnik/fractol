@@ -28,11 +28,11 @@ void sdl_loop(t_app *app)
 {
 	SDL_Event event;
 
-    while (SDL_PollEvent(&event) && event.type != SDL_QUIT)
-    {
-        if (event.type == SDL_WINDOWEVENT && SDL_GetWindowID(app->win) == event.window.windowID)
-            on_app_event(app, &event);
-    }
+	while (SDL_PollEvent(&event) && event.type != SDL_QUIT)
+	{
+		if (event.type == SDL_WINDOWEVENT && SDL_GetWindowID(app->win) == event.window.windowID)
+			on_app_event(app, &event);
+	}
 }
 
 int _main(int argc, char **argv)
@@ -123,101 +123,101 @@ int _main(int argc, char **argv)
 
 size_t tab_len(const char **tab)
 {
-    size_t len;
+	size_t len;
 
-    len = 0;
-    while (tab && tab[len])
-    {
-        len++;
-    }
-    return (len);
+	len = 0;
+	while (tab && tab[len])
+	{
+		len++;
+	}
+	return (len);
 }
 
 static void    internal_pick_fractal(const char *name, const char *src, t_renderer *ren)
 {
-    ren->kernel_name = ft_strnew(ft_strlen(name));
-    ren->src = ft_strsplit(src, ' ');
-    ren->src_count = tab_len((const char **)ren->src);
+	ren->kernel_name = ft_strnew(ft_strlen(name));
+	ren->src = ft_strsplit(src, ' ');
+	ren->src_count = tab_len((const char **)ren->src);
 }
 
 static int     pick_fractal(const char *name, t_renderer *ren)
 {
-    if (ft_strcmp(name, MANDELBROT) == 0)
-        internal_pick_fractal(MANDELBROT, MANDELBROT_SRC, ren);
-    else if (ft_strcmp(name, JULIA) == 0)
-        internal_pick_fractal(JULIA, JULIA_SRC, ren);
-    else
-        return (0);
-    return (ren->kernel_name && ren->src && ren->src_count);
+	if (ft_strcmp(name, MANDELBROT) == 0)
+		internal_pick_fractal(MANDELBROT, MANDELBROT_SRC, ren);
+	else if (ft_strcmp(name, JULIA) == 0)
+		internal_pick_fractal(JULIA, JULIA_SRC, ren);
+	else
+		return (0);
+	return (ren->kernel_name && ren->src && ren->src_count);
 }
 
 int     new_renderer(
-            const char *name,
-            t_renderer *ren,
-            cl_device_id device,
-            cl_context context
-        )
+			const char *name,
+			t_renderer *ren,
+			cl_device_id device,
+			cl_context context
+		)
 {
-    int err;
+	int err;
 
-    if (!pick_fractal(name, ren))
-    {
-        ft_putendl_fd("Failed to pick fractal", 2);
-        return (0);
-    }
-    ren->program = ocl_create_program(context, (const char **)ren->src, ren->src_count);
-    if (!ren->program || OCL_ERROR(clBuildProgram(ren->program, 0, NULL, "-I./src/cl", NULL, NULL),
-            "Failed to build program"))
-        return (0);
-    ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);
-    if (OCL_ERROR(err, "Failed to create kernel"))
-        return (0);
-    ren->queue = clCreateCommandQueue(context, device, NULL, &err);
-    if (OCL_ERROR(err, "Failed to create queue"))
-        return (0);
-    return (1);
+	if (!pick_fractal(name, ren))
+	{
+		ft_putendl_fd("Failed to pick fractal", 2);
+		return (0);
+	}
+	ren->program = ocl_create_program(context, (const char **)ren->src, ren->src_count);
+	if (!ren->program || OCL_ERROR(clBuildProgram(ren->program, 0, NULL, "-I./src/cl", NULL, NULL),
+			"Failed to build program"))
+		return (0);
+	ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);
+	if (OCL_ERROR(err, "Failed to create kernel"))
+		return (0);
+	ren->queue = clCreateCommandQueue(context, device, NULL, &err);
+	if (OCL_ERROR(err, "Failed to create queue"))
+		return (0);
+	return (1);
 }
 
 void    delete_renderer(t_renderer *ren)
 {
-    ren->queue ? clReleaseCommandQueue(ren->queue) : 0;
-    ren->kernel ? clReleaseKernel(ren->kernel) : 0;
-    ren->program ? clReleaseProgram(ren->program) : 0;
-    ren->kernel_name ? ft_strdel(&ren->kernel_name) : 0;
-    while (ren->src_count--)
-        ft_strdel(&ren->src[ren->src_count]);
-    ren->src ? ft_memdel((void **)&ren->src) : 0;
+	ren->queue ? clReleaseCommandQueue(ren->queue) : 0;
+	ren->kernel ? clReleaseKernel(ren->kernel) : 0;
+	ren->program ? clReleaseProgram(ren->program) : 0;
+	ren->kernel_name ? ft_strdel(&ren->kernel_name) : 0;
+	while (ren->src_count--)
+		ft_strdel(&ren->src[ren->src_count]);
+	ren->src ? ft_memdel((void **)&ren->src) : 0;
 }
 
 int    app_start(t_app *app, const char *fractal_name)
 {
-    ft_bzero(app, sizeof(t_app));
-    if (!(app->win = SDL_CreateWindow(
-    fractal_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    WIN_WIDTH, WIN_HEIGHT, WIN_FLAGS)))
-    {
-        ft_putendl_fd("Window could not be created! SDL_Error: ", 2);
-        ft_putendl_fd(SDL_GetError(), 2);
-        return (0);
-    }
-    if (!(ocl_init(&app->ocl)))
-    {
-        ft_putendl_fd("Failed to initialise OpenCL", 2);
-        return (0);
-    }
-    if (!new_renderer(fractal_name, &app->ren, app->ocl.device, app->ocl.context))
-    {
-        ft_putendl_fd("Failed to create renderer", 2);
-        return (0);
-    }
-    return (1);
+	ft_bzero(app, sizeof(t_app));
+	if (!(app->win = SDL_CreateWindow(
+	fractal_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+	WIN_WIDTH, WIN_HEIGHT, WIN_FLAGS)))
+	{
+		ft_putendl_fd("Window could not be created! SDL_Error: ", 2);
+		ft_putendl_fd(SDL_GetError(), 2);
+		return (0);
+	}
+	if (!(ocl_init(&app->ocl)))
+	{
+		ft_putendl_fd("Failed to initialise OpenCL", 2);
+		return (0);
+	}
+	if (!new_renderer(fractal_name, &app->ren, app->ocl.device, app->ocl.context))
+	{
+		ft_putendl_fd("Failed to create renderer", 2);
+		return (0);
+	}
+	return (1);
 }
 
 void    app_finish(t_app *app)
 {
-    app->win ? SDL_DestroyWindow(app->win) : 0;
-    delete_renderer(&app->ren);
-    ocl_release(&app->ocl);
+	app->win ? SDL_DestroyWindow(app->win) : 0;
+	delete_renderer(&app->ren);
+	ocl_release(&app->ocl);
 }
 void    on_app_event(t_app *app, SDL_Event *event)
 {
@@ -225,19 +225,19 @@ void    on_app_event(t_app *app, SDL_Event *event)
 
 int main(int argc, char **argv)
 {
-    t_app app;
+	t_app app;
 
-    if (argc < 2 || argc > 2)
-        ft_putendl(USAGE);
-    else if (ft_strcmp(argv[1], HELP_ARG) == 0)
-        ft_putendl(HELP);
-    else
-    {
-        !sdl_init() ? exit(1) : 0;
-        app_start(&app, argv[1]);
-        sdl_loop(&app);
-        app_finish(&app);
-        SDL_Quit();
-    }
+	if (argc < 2 || argc > 2)
+		ft_putendl(USAGE);
+	else if (ft_strcmp(argv[1], HELP_ARG) == 0)
+		ft_putendl(HELP);
+	else
+	{
+		!sdl_init() ? exit(1) : 0;
+		app_start(&app, argv[1]);
+		sdl_loop(&app);
+		app_finish(&app);
+		SDL_Quit();
+	}
 	return (0);
 }
