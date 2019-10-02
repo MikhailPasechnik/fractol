@@ -26,7 +26,7 @@ int     new_renderer(const char *name, t_app *app)
 	ren->program = ocl_create_program(app->ocl.context,
 			(const char **)ren->src, ren->src_count);
 	if (!ren->program || OCL_ERROR(clBuildProgram(
-			ren->program, 0, NULL, "-I./src/cl", NULL, NULL),
+			ren->program, 0, NULL, "-I src/cl", NULL, NULL),
 					"Failed to build program"))
 		return (0);
 	ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);
@@ -36,6 +36,8 @@ int     new_renderer(const char *name, t_app *app)
 			app->ocl.device, NULL, &err);
 	if (OCL_ERROR(err, "Failed to create queue"))
 		return (0);
+	ren->zoom = ZOOM;
+	ren->iterations = ITERATIONS;
 	return (1);
 }
 
@@ -63,6 +65,10 @@ static int	pre_render(t_app *app)
 		app->ren.out = clCreateBuffer(
 				app->ocl.context, CL_MEM_READ_WRITE,
 				sizeof(cl_int) * app->win_h * app->win_h, NULL, &err);
+		ren->out_w = app->win_w;
+		ren->out_h = app->win_h;
+		ren->width = app->win_w;
+		ren->height = app->win_h;
 	}
 	return (OCL_ERROR(err, "Failed to pre render!") ? 0 : 1);
 }
@@ -87,12 +93,28 @@ static int set_kernel_args(t_app *app)
 
 void			render(t_app *app)
 {
-	int err;
+	int	err;
+	size_t size;
 
 	// Pre render
 	pre_render(app);
 	// Set kernel params
 	set_kernel_args(app);
+	printf("zoom: %f\nmouse_x: %f\nmouse_y: %f\noffset_x: %f\noffset_y: %f\nwidth: %d\nheight: %d\niterations: %d\n",
+		   app->ren.zoom, app->ren.mouse_x, app->ren.mouse_y, app->ren.offset_x, app->ren.offset_y, app->ren.width, app->ren.height, app->ren.iterations);
 	// Enqueue surface
-	// Set surface from re
+	size = app->win_h * app->win_h;
+	err = clEnqueueNDRangeKernel(app->ren.queue, app->ren.kernel,
+			1, NULL, &size, NULL, 0, NULL, NULL);
+	if (OCL_ERROR(err, "Failed to enqueue render surface!"))
+		return ;
+	if OCL_ERROR(clFinish(app->ren.queue), "Failed to finish queue!")
+		return ;
+	SDL_Surface *surface;
+	surface = SDL_GetWindowSurface(app->win);
+	if (OCL_ERROR(clEnqueueReadBuffer(app->ren.queue, app->ren.out, CL_TRUE, 0,
+					sizeof(cl_int) * size, surface->pixels, 0, NULL, NULL
+			), "Failed to read render output to the surface"))
+		return ;
+	SDL_UpdateWindowSurface(app->win);
 }
