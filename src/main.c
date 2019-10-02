@@ -26,13 +26,17 @@ int		sdl_init()
 
 void	sdl_loop(t_app *app)
 {
-	SDL_Event event;
+	SDL_Event	event;
+	int			quit;
 
-	while (SDL_PollEvent(&event) && event.type != SDL_QUIT)
-	{
-		if (event.type == SDL_WINDOWEVENT && SDL_GetWindowID(app->win) == event.window.windowID)
-			on_app_event(app, &event);
-	}
+	quit = 0;
+	while (!quit)
+		while (SDL_PollEvent(&event))
+		{
+			quit = event.type == SDL_QUIT;
+			if (SDL_GetWindowID(app->win) == event.window.windowID)
+				on_app_event(app, &event);
+		}
 }
 
 int _main(int argc, char **argv)
