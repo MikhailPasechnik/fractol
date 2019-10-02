@@ -15,17 +15,8 @@
 int		app_start(t_app *app, const char *fractal_name)
 {
 	ft_bzero(app, sizeof(t_app));
-	if (!(app->win = SDL_CreateWindow(
-			fractal_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-			WIN_WIDTH, WIN_HEIGHT, WIN_FLAGS)))
-	{
-		ft_putendl_fd("Window could not be created! SDL_Error: ", 2);
-		ft_putendl_fd(SDL_GetError(), 2);
-		return (0);
-	}
-	app->win_h = WIN_HEIGHT;
-	app->win_w = WIN_WIDTH;
-	SDL_GetWindowSize(app->win, &app->win_w, &app->win_w);
+    app->win_h = WIN_HEIGHT;
+    app->win_w = WIN_WIDTH;
 	if (!(ocl_init(&app->ocl)))
 	{
 		ft_putendl_fd("Failed to initialise OpenCL", 2);
@@ -36,6 +27,16 @@ int		app_start(t_app *app, const char *fractal_name)
 		ft_putendl_fd("Failed to create renderer", 2);
 		return (0);
 	}
+    if (!(app->win = SDL_CreateWindow(
+            fractal_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+            WIN_WIDTH, WIN_HEIGHT, WIN_FLAGS)))
+    {
+        ft_putendl_fd("Window could not be created! SDL_Error: ", 2);
+        ft_putendl_fd(SDL_GetError(), 2);
+        return (0);
+    }
+    SDL_GetWindowSize(app->win, &app->win_w, &app->win_h);
+    render(app);
 	return (1);
 }
 
