@@ -26,7 +26,7 @@ int     new_renderer(const char *name, t_app *app)
 	ren->program = ocl_create_program(app->ocl.context,
 			(const char **)ren->src, ren->src_count);
 	if (!ren->program || OCL_ERROR(clBuildProgram(
-			ren->program, 0, NULL, "-I src/cl", NULL, NULL),
+			ren->program, 0, NULL, "-I./src/cl", NULL, NULL),
 					"Failed to build program"))
 		return (0);
 	ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);
@@ -38,6 +38,8 @@ int     new_renderer(const char *name, t_app *app)
 		return (0);
 	ren->zoom = ZOOM;
 	ren->iterations = ITERATIONS;
+	ren->mouse_x = app->win_w / 2.0;
+	ren->mouse_y = app->win_h / 2.0;
 	return (1);
 }
 
@@ -59,16 +61,22 @@ static int	pre_render(t_app *app)
 
 	ren = &app->ren;
 	err = 0;
-	if (!ren->out || app->win_w != ren->out_w || app->win_h != ren->out_h)
+	if (!ren->out_mem || app->win_w != ren->out_w || app->win_h != ren->out_h)
 	{
-		app->ren.out ? clReleaseMemObject(ren->out) : 0;
-		app->ren.out = clCreateBuffer(
+//	    ren->result ? ft_memdel((void **)&ren->result) : 0;
+        ren->out_mem ? clReleaseMemObject(ren->out_mem) : 0;
+		ren->out_mem = clCreateBuffer(
 				app->ocl.context, CL_MEM_READ_WRITE,
-				sizeof(cl_int) * app->win_h * app->win_h, NULL, &err);
+				sizeof(cl_int) * app->win_w * app->win_h, NULL, &err);
 		ren->out_w = app->win_w;
 		ren->out_h = app->win_h;
 		ren->width = app->win_w;
 		ren->height = app->win_h;
+//		if (!(ren->result = malloc(sizeof(cl_int) * app->win_w * app->win_h)))
+//		{
+//		    ft_putendl_fd("Failed to allocate render result!", 2);
+//            return 0;
+//        }
 	}
 	return (OCL_ERROR(err, "Failed to pre render!") ? 0 : 1);
 }
@@ -87,7 +95,7 @@ static int set_kernel_args(t_app *app)
 	err |= clSetKernelArg(ren->kernel, 5, sizeof(cl_int), &ren->width);
 	err |= clSetKernelArg(ren->kernel, 6, sizeof(cl_int), &ren->height);
 	err |= clSetKernelArg(ren->kernel, 7, sizeof(cl_int), &ren->iterations);
-	err |= clSetKernelArg(ren->kernel, 8, sizeof(ren->out), &ren->out);
+	err |= clSetKernelArg(ren->kernel, 8, sizeof(ren->out_mem), &ren->out_mem);
 	return (OCL_ERROR(err, "Failed to set kernel args!") ? 0 : 1);
 }
 
@@ -103,7 +111,7 @@ void			render(t_app *app)
 	printf("zoom: %f\nmouse_x: %f\nmouse_y: %f\noffset_x: %f\noffset_y: %f\nwidth: %d\nheight: %d\niterations: %d\n",
 		   app->ren.zoom, app->ren.mouse_x, app->ren.mouse_y, app->ren.offset_x, app->ren.offset_y, app->ren.width, app->ren.height, app->ren.iterations);
 	// Enqueue surface
-	size = app->win_h * app->win_h;
+	size = app->win_w * app->win_h;
 	err = clEnqueueNDRangeKernel(app->ren.queue, app->ren.kernel,
 			1, NULL, &size, NULL, 0, NULL, NULL);
 	if (OCL_ERROR(err, "Failed to enqueue render surface!"))
@@ -112,9 +120,18 @@ void			render(t_app *app)
 		return ;
 	SDL_Surface *surface;
 	surface = SDL_GetWindowSurface(app->win);
-	if (OCL_ERROR(clEnqueueReadBuffer(app->ren.queue, app->ren.out, CL_TRUE, 0,
+	if (OCL_ERROR(clEnqueueReadBuffer(app->ren.queue, app->ren.out_mem, CL_TRUE, 0,
 					sizeof(cl_int) * size, surface->pixels, 0, NULL, NULL
 			), "Failed to read render output to the surface"))
 		return ;
+//	SDL_PixelFormat *fmt;
+//    fmt = surface->format;
+//    Uint32 *pixels = ((Uint32*)surface->pixels);
+//    while (size--)
+//        pixels[size] = SDL_MapRGB(
+//                fmt,
+//                app->ren.result[size] >> 16 & 0xFF,
+//                app->ren.result[size] >> 8 & 0xFF,
+//                app->ren.result[size] & 0xFF);
 	SDL_UpdateWindowSurface(app->win);
 }
