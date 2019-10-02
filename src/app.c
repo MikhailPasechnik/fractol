@@ -23,6 +23,8 @@ int		app_start(t_app *app, const char *fractal_name)
 		ft_putendl_fd(SDL_GetError(), 2);
 		return (0);
 	}
+	app->win_h = WIN_HEIGHT;
+	app->win_w = WIN_WIDTH;
 	SDL_GetWindowSize(app->win, &app->win_w, &app->win_w);
 	if (!(ocl_init(&app->ocl)))
 	{
