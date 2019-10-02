@@ -26,8 +26,8 @@ size_t			tab_len(const char **tab)
 
 static void		set_fractal(const char *name, const char *src, t_renderer *ren)
 {
-	ren->kernel_name = ft_strnew(ft_strlen(name));
-	ren->src = ft_strsplit(src, ' ');
+	ren->kernel_name = ft_strdup(name);
+	ren->src = ft_strsplit_any(src, " \n");
 	ren->src_count = tab_len((const char **)ren->src);
 }
 
