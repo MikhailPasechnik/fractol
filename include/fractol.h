@@ -93,4 +93,11 @@ size_t			tab_len(const char **tab);
 int				pick_fractal(const char *name, t_renderer *ren);
 
 
+/*
+** Event functions
+*/
+void	on_mouse_move(SDL_Event *event, t_app *app, int *changed);
+void	on_window_size_change(SDL_Event *event, t_app *app, int *changed);
+void	on_mouse_wheel(SDL_Event *event, t_app *app, int *changed);
+
 #endif
