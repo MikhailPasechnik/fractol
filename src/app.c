@@ -47,6 +47,14 @@ void	app_finish(t_app *app)
 }
 void	on_app_event(t_app *app, SDL_Event *event)
 {
-	if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-		SDL_GetWindowSize(app->win, &app->win_w, &app->win_w);
+	int	changed;
+
+	changed = 0;
+	if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+		on_window_size_change(event, app, &changed);
+	else if (event->type == SDL_MOUSEMOTION)
+		on_mouse_move(event, app, &changed);
+	else if (event->type == SDL_MOUSEWHEEL)
+		on_mouse_wheel(event, app, &changed);
+	changed ? render(app) : 0;
 }
