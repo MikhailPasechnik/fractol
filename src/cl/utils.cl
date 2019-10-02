@@ -1,44 +1,28 @@
+#include "utils.h"
 
 void hsv_to_rgb(int hue, float sat, float val, int rgb[3])
 {
-    float x;
-    float m;
-    float f_rgb[3];
+    float   x;
+    float   m;
+    t_frgb  frgb;
+
     x = sat * val * (1 - fabs(fmod(hue / 60.0, 2.0) - 1));
     m = val - sat * val;
-    if(hue >= 0 && hue < 60) {
-        f_rgb[0] = sat * val;
-        f_rgb[1] = x;
-        f_rgb[2] = 0;
-    }
-    else if(hue >= 60 && hue < 120) {
-        f_rgb[0] = x;
-        f_rgb[1] = sat * val;
-        f_rgb[2] = 0;
-    }
-    else if(hue >= 120 && hue < 180) {
-        f_rgb[0] = 0;
-        f_rgb[1] = sat * val;
-        f_rgb[2] = x;
-    }
-    else if(hue >= 180 && hue < 240) {
-        f_rgb[0] = 0;
-        f_rgb[1] = x;
-        f_rgb[2] = sat * val;
-    }
-    else if(hue >= 240 && hue < 300) {
-        f_rgb[0] = x;
-        f_rgb[1] = 0;
-        f_rgb[2] = sat * val;
-    }
-    else {
-        f_rgb[0] = sat * val;
-        f_rgb[1] = 0;
-        f_rgb[2] = x;
-    }
-    rgb[0] = (f_rgb[0] + m) * 255;
-    rgb[1] = (f_rgb[1] + m) * 255;
-    rgb[2] = (f_rgb[2] + m) * 255;
+    if(hue >= 0 && hue < 60)
+        frgb = (t_frgb){sat * val, x, 0};
+    else if(hue >= 60 && hue < 120)
+        frgb = (t_frgb){x, sat * val, 0};
+    else if(hue >= 120 && hue < 180)
+        frgb = (t_frgb){0, sat * val, x};
+    else if(hue >= 180 && hue < 240)
+        frgb = (t_frgb){0, x, sat * val};
+    else if(hue >= 240 && hue < 300)
+        frgb = (t_frgb){x, 0, sat * val};
+    else
+        frgb = (t_frgb){sat * val, 0, x};
+    rgb[0] = (frgb.r + m) * 255;
+    rgb[1] = (frgb.g + m) * 255;
+    rgb[2] = (frgb.b + m) * 255;
 }
 
 
