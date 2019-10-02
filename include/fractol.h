@@ -24,6 +24,8 @@
 # define WIN_WIDTH 500
 # define WIN_HEIGHT 300
 # define WIN_FLAGS SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+# define ITERATIONS 100;
+# define ZOOM 1;
 
 # define HELP_ARG "help"
 # define USAGE "./fractol "HELP_ARG
@@ -32,9 +34,9 @@
 # define MANDELBROT "mandelbrot"
 # define JULIA "julia"
 
-# define SRC "src/cl/complex.c src/cl/utils.c"
-# define MANDELBROT_SRC SRC" src/cl/"MANDELBROT".c"
-# define JULIA_SRC SRC" src/cl/"JULIA".c"
+# define SRC "src/cl/complex.cl src/cl/utils.cl"
+# define MANDELBROT_SRC SRC" src/cl/"MANDELBROT".cl"
+# define JULIA_SRC SRC" src/cl/"JULIA".cl"
 
 typedef struct	s_renderer
 {
