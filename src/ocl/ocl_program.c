@@ -45,10 +45,12 @@ static int		read_files(const char **file_names, size_t count,
 {
 	size_t	i;
 
-	if (!content || !size || !(*content = malloc(sizeof(**content) * count)) ||
+	if (!(*content = malloc(sizeof(**content) * count)) ||
 		!(*size = malloc(sizeof(**size) * count)))
-		return (0);
-
+    {
+        *content ? free(*content) : 0;
+        return 0;
+    }
 	i = 0;
 	while (i < count)
 	{
@@ -58,6 +60,8 @@ static int		read_files(const char **file_names, size_t count,
 			ft_putendl_fd(file_names[i], 2);
 			while(i--)
 				free((*content)[i]);
+			free(*content);
+			free(*size);
 			break ;
 		}
 		i++;
@@ -77,6 +81,7 @@ cl_program		ocl_create_program(cl_context ctx, const char **file_names, size_t c
 	program = clCreateProgramWithSource(ctx, count, (const char **)content, size, &err);
 	while (count--)
 		free(content[count]);
+	free(content);
 	free(size);
 	if (OCL_ERROR(err, "Couldn't create the program"))
 		return (NULL);
