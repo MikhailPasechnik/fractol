@@ -73,6 +73,7 @@ typedef struct	s_app
 	SDL_Window			*win;
 	int					win_w;
 	int					win_h;
+	int 				quit;
 
 	t_renderer			ren;
 	t_ocl				ocl;
@@ -104,8 +105,9 @@ int				pick_fractal(const char *name, t_renderer *ren);
 /*
 ** Event functions
 */
-void	on_mouse_move(SDL_Event *event, t_app *app, int *changed);
-void	on_window_size_change(SDL_Event *event, t_app *app, int *changed);
-void	on_mouse_wheel(SDL_Event *event, t_app *app, int *changed);
+void	on_mouse_move(SDL_MouseMotionEvent *event, t_app *app, int *changed);
+void	on_window_size_change(SDL_WindowEvent *event, t_app *app, int *changed);
+void	on_mouse_wheel(SDL_MouseWheelEvent *event, t_app *app, int *changed);
+void	on_key_press(SDL_KeyboardEvent *event, t_app *app, int *changed);
 
 #endif
