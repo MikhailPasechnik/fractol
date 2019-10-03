@@ -24,7 +24,7 @@ __kernel void julia(
 	x = id % width;
 	y = id / width;
 	i = 0;
-	c = (t_complex){mouse_x, mouse_y};
+	c = (t_complex){mouse_x / 200.0, mouse_y / 200.0};
 	z = (t_complex){
 			1.5 * (x - width  / 2) / (0.5 * zoom * width)  + offset_x,
 			1 * (y - height / 2) / (0.5 * zoom * height) + offset_y
