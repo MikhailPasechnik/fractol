@@ -18,6 +18,10 @@ CFLAGS		=	-Wall -Wextra -Werror
 
 SRC_FILES	=			\
 	main.c 				\
+	app.c 				\
+	events.c 			\
+	renderer.c 			\
+	utils.c 			\
 	ocl/ocl_error.c  	\
 	ocl/ocl_init.c  	\
 	ocl/ocl_program.c  	\
