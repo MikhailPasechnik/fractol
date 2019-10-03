@@ -57,7 +57,7 @@ typedef struct	s_renderer
 	cl_int				height;
 	cl_int				iterations;
 
-	cl_mem				out;
+	cl_mem				out_mem;
 	int					out_w;
 	int					out_h;
 }               t_renderer;
