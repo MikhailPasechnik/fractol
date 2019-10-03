@@ -12,6 +12,21 @@
 
 #include "fractol.h"
 
+static int app_render(t_app *app)
+{
+	SDL_Surface	*surface;
+
+	app->ren.width = app->win_w;
+	app->ren.height = app->win_h;
+	surface = SDL_GetWindowSurface(app->win);
+	if (!render(&app->ren, &app->ocl, surface->pixels))
+	{
+		return (0);
+	}
+	SDL_UpdateWindowSurface(app->win);
+	return (1);
+}
+
 int		app_start(t_app *app, const char *fractal_name)
 {
 	ft_bzero(app, sizeof(t_app));
@@ -22,7 +37,7 @@ int		app_start(t_app *app, const char *fractal_name)
 		ft_putendl_fd("Failed to initialise OpenCL", 2);
 		return (0);
 	}
-	if (!new_renderer(fractal_name, app))
+	if (!new_renderer(fractal_name, &app->ren, &app->ocl))
 	{
 		ft_putendl_fd("Failed to create renderer", 2);
 		return (0);
@@ -36,8 +51,7 @@ int		app_start(t_app *app, const char *fractal_name)
         return (0);
     }
     SDL_GetWindowSize(app->win, &app->win_w, &app->win_h);
-    render(app);
-	return (1);
+	return (app_render(app));
 }
 
 void	app_finish(t_app *app)
@@ -46,16 +60,19 @@ void	app_finish(t_app *app)
 	delete_renderer(&app->ren);
 	ocl_release(&app->ocl);
 }
+
 void	on_app_event(t_app *app, SDL_Event *event)
 {
 	int	changed;
 
 	changed = 0;
 	if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-		on_window_size_change(event, app, &changed);
+		on_window_size_change(&event->window, app, &changed);
 	else if (event->type == SDL_MOUSEMOTION)
-		on_mouse_move(event, app, &changed);
+		on_mouse_move(&event->motion, app, &changed);
 	else if (event->type == SDL_MOUSEWHEEL)
-		on_mouse_wheel(event, app, &changed);
-	changed ? render(app) : 0;
+		on_mouse_wheel(&event->wheel, app, &changed);
+	else if (event->type == SDL_KEYDOWN)
+		on_key_press(&event->key, app, &changed);
+	changed ? app_render(app) : 0;
 }

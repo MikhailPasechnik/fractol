@@ -90,9 +90,9 @@ void			on_app_event(t_app *app, SDL_Event *event);
 /*
 ** Render functions
 */
-int				new_renderer(const char *name, t_app *app);
+int				new_renderer(const char *name, t_renderer *ren, t_ocl *ocl);
 void			delete_renderer(t_renderer *ren);
-void			render(t_app *app);
+int				render(t_renderer *ren, t_ocl *ocl, cl_int *result);
 
 
 /*
