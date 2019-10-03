@@ -26,7 +26,7 @@ int     new_renderer(const char *name, t_app *app)
 	ren->program = ocl_create_program(app->ocl.context,
 			(const char **)ren->src, ren->src_count);
 	if (!ren->program || OCL_ERROR(clBuildProgram(
-			ren->program, 0, NULL, "-I./src/cl", NULL, NULL),
+			ren->program, 0, NULL, FCL_INCLUDE, NULL, NULL),
 					"Failed to build program"))
 		return (0);
 	ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);

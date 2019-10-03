@@ -34,9 +34,15 @@
 # define MANDELBROT "mandelbrot"
 # define JULIA "julia"
 
-# define SRC "src/cl/complex.cl src/cl/utils.cl"
-# define MANDELBROT_SRC SRC" src/cl/"MANDELBROT".cl"
-# define JULIA_SRC SRC" src/cl/"JULIA".cl"
+# ifdef __APPLE__
+	# define FCL_INCLUDE "-I src/cl"
+# else
+	# define FCL_INCLUDE "-I./src/cl"
+# endif
+# define FCL_SRC "src/cl/complex.cl src/cl/utils.cl"
+
+# define MANDELBROT_SRC FCL_SRC" src/cl/"MANDELBROT".cl"
+# define JULIA_SRC FCL_SRC" src/cl/"JULIA".cl"
 
 typedef struct	s_renderer
 {
