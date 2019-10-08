@@ -14,16 +14,19 @@ __kernel void mandelbrot(
 )
 {
     int 		i;
+    int         id;
     t_complex 	c;
     t_complex 	z;
     double2     point;
-    point.x = get_global_id(0) % width - width  / 2;
-    point.y = get_global_id(0) / width - height / 2;
+
+    id = get_global_id(0);
+    point.x = id % width - width  / 2;
+    point.y = id / width - height / 2;
     point /= zoom;
     point.x += offset_x;
     point.y += offset_y;
-    point.x *= -2.5l / ((double)width / 2);
-    point.y *= 1.0l / ((double)height / 2);
+    point.x *= -2.5 / ((double)width / 2);
+    point.y *= 1.0 / ((double)height / 2);
     i = 0;
     c = (t_complex){point.x, point.y};
     z = c;
