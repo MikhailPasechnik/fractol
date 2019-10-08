@@ -13,36 +13,10 @@
 
 #include "fractol.h"
 
-int		sdl_init()
-{
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
-	{
-		ft_putendl_fd("Failed to init SDL! SDL_Error: ", 2);
-		ft_putendl_fd(SDL_GetError(), 2);
-		return (0);
-	}
-	return (1);
-}
-
-void	sdl_loop(t_app *app)
-{
-	SDL_Event	event;
-	int			quit;
-
-	quit = 0;
-	while (!quit)
-		while (SDL_PollEvent(&event))
-		{
-			quit = event.type == SDL_QUIT;
-			if (SDL_GetWindowID(app->win) == event.window.windowID)
-				on_app_event(app, &event);
-			quit = quit || app->quit;
-		}
-}
-
 int main(int argc, char **argv)
 {
-	t_app app;
+	t_app   app;
+	void    *mlx;
 
 	if (argc < 2 || argc > 2)
 		ft_putendl(USAGE);
@@ -50,15 +24,19 @@ int main(int argc, char **argv)
 		ft_putendl(HELP);
 	else
 	{
-		!sdl_init() ? exit(1) : 0;
-		if (!app_start(&app, argv[1]))
+	    if (!(mlx = mlx_init()))
+        {
+	        ft_putendl_fd("Failed to initialise mlx", 2);
+	        exit(1);
+        }
+		if (!app_start(&app, argv[1], mlx))
 			app_finish(&app);
 		else
 		{
-			sdl_loop(&app);
+            mlx_loop(mlx);
 			app_finish(&app);
 		}
-		SDL_Quit();
-	}
+        free(mlx);
+    }
 	return (0);
 }

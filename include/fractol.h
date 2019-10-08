@@ -19,13 +19,60 @@
 # include "libft.h"
 # include "keys.h"
 # include "ocl.h"
-# include "SDL.h"
+# include "mlx.h"
 
 # define WIN_WIDTH 500
 # define WIN_HEIGHT 300
 # define WIN_FLAGS SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 # define ITERATIONS 100;
 # define ZOOM 1;
+
+# ifdef __APPLE__
+#  define X_ON_KEY 2, 0
+#  define X_ON_MOUSE_MOVE 6, 0
+#  define KEY_PLUS 69
+#  define KEY_MINUS 78
+#  define KEY_W 13
+#  define KEY_A 0
+#  define KEY_S 1
+#  define KEY_D 2
+#  define KEY_Q 12
+#  define KEY_E 14
+#  define KEY_R 15
+#  define KEY_T 17
+#  define KEY_Y 16
+#  define KEY_U 32
+#  define KEY_V 9
+#  define KEY_UP 126
+#  define KEY_LEFT 123
+#  define KEY_RIGHT 124
+#  define KEY_DOWN 125
+#  define KEY_ESC 53
+# else
+
+#  include <X11/X.h>
+#  include <X11/keysym.h>
+#  define X_ON_KEY KeyPress, KeyPressMask
+#  define X_ON_MOUSE_MOVE MotionNotify, 0
+#  define KEY_PLUS XK_equal
+#  define KEY_MINUS XK_minus
+#  define KEY_W 119
+#  define KEY_A 97
+#  define KEY_S 115
+#  define KEY_D 100
+#  define KEY_Q 113
+#  define KEY_E 101
+#  define KEY_R 114
+#  define KEY_T 116
+#  define KEY_Y 121
+#  define KEY_U 117
+#  define KEY_V 118
+#  define KEY_UP 62
+#  define KEY_LEFT 62
+#  define KEY_RIGHT 66
+#  define KEY_DOWN 68
+#  define KEY_ESC 65307
+# endif
 
 # define HELP_ARG "help"
 # define USAGE "./fractol "HELP_ARG
@@ -57,8 +104,8 @@ typedef struct	s_renderer
 	cl_float			zoom;
 	cl_float			mouse_x;
 	cl_float			mouse_y;
-	cl_float			offset_x;
-	cl_float			offset_y;
+    cl_double	        offset_x;
+    cl_double			offset_y;
 	cl_int				width;
 	cl_int				height;
 	cl_int				iterations;
@@ -70,10 +117,18 @@ typedef struct	s_renderer
 
 typedef struct	s_app
 {
-	SDL_Window			*win;
+    void		        *mlx;
+	void                *win;
+	void                *img;
+	void                *pixel_ptr;
+	int                 bits_per_pixel;
+	int                 size_line;
+	int                 endian;
 	int					win_w;
 	int					win_h;
+
 	int 				quit;
+	int                 changed;
 
 	t_renderer			ren;
 	t_ocl				ocl;
@@ -82,9 +137,9 @@ typedef struct	s_app
 /*
 ** App functions
 */
-int				app_start(t_app *app, const char *fractal_name);
+int				app_start(t_app *app, const char *fractal_name, void *mlx);
 void			app_finish(t_app *app);
-void			on_app_event(t_app *app, SDL_Event *event);
+int             app_render(t_app *app);
 
 
 /*
@@ -105,9 +160,8 @@ int				pick_fractal(const char *name, t_renderer *ren);
 /*
 ** Event functions
 */
-void	on_mouse_move(SDL_MouseMotionEvent *event, t_app *app, int *changed);
-void	on_window_size_change(SDL_WindowEvent *event, t_app *app, int *changed);
-void	on_mouse_wheel(SDL_MouseWheelEvent *event, t_app *app, int *changed);
-void	on_key_press(SDL_KeyboardEvent *event, t_app *app, int *changed);
+int     on_mouse_move(int x, int y, t_app *app);
+int     on_mouse_wheel(int x, int y, t_app *app);
+int     on_key_press(int key, t_app *app);
 
 #endif

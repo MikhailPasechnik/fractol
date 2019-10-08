@@ -55,9 +55,14 @@ LIBS		:=	./libft/libft.a -lm
 
 ifeq ($(OS),Linux)
 	LIBS	:= $(LIBS) -lOpenCL
+	MINILIBX_DIR=./minilibx
+    MINILIBX_LINK=-L$(MINILIBX_DIR) -lmlx -lXext -lX11
 else
 	LIBS	:= $(LIBS) -framework OpenCL
+    MINILIBX_DIR=./minilibx_macos
+    MINILIBX_LINK=-L$(MINILIBX_DIR) -lmlx -framework OpenGL -framework AppKit
 endif
+MINILIBX=$(MINILIBX_DIR)/libmix.a
 
 all: $(NAME)
 
@@ -65,11 +70,14 @@ $(DIR_OBJ):
 	@mkdir $(DIR_OBJ)
 	@mkdir $(DIR_OBJ)/ocl
 
-$(NAME): $(SDL_DIST)  $(DIR_OBJ) $(OBJ) $(LIBFT)
+$(NAME): $(MINILIBX)  $(DIR_OBJ) $(OBJ) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME) $(SDL_LINK)
 
 $(DIR_OBJ)/%.o:$(DIR_SRC)/%.c $(HDR)
 	@$(CC) $(CFLAGS) -c $(INCLUDES) $< -o $@
+
+$(MINILIBX): FAKE
+	@$(MAKE) -C $(MINILIBX_DIR)/ --no-print-directory
 
 $(LIBFT): FAKE
 	@$(MAKE) -C $(LIBFT_DIR)/ --no-print-directory

@@ -1,42 +1,39 @@
 #include "fractol.h"
 
-void	on_mouse_move(SDL_MouseMotionEvent *event, t_app *app, int *changed)
+int     on_mouse_move(int x, int y, t_app *app)
 {
-    app->ren.mouse_x = (app->win_w / 2.0 - event->x);;
-    app->ren.mouse_y = (app->win_h / 2.0 - event->y);;
-	*changed = 1;
+    app->ren.mouse_x = (app->win_w / 2.0 - x);;
+    app->ren.mouse_y = (app->win_h / 2.0 - y);;
+	app->changed = 1;
+	return (1);
 }
 
-void	on_window_size_change(SDL_WindowEvent *event, t_app *app, int *changed)
+int     on_mouse_wheel(int x, int y, t_app *app)
 {
-	(void)event;
-	SDL_GetWindowSize(app->win, &app->win_w, &app->win_h);
-	*changed = 1;
-}
-
-void	on_mouse_wheel(SDL_MouseWheelEvent *event, t_app *app, int *changed)
-{
-    app->ren.zoom += -(float)event->y * app->ren.zoom / 10;
+    app->ren.zoom += -(float)y * app->ren.zoom / 10.0f;
     app->ren.zoom = app->ren.zoom > 0 ? app->ren.zoom : 1;
-    *changed = 1;
+    app->changed = 1;
+    return (1);
 }
 
-void	on_key_press(SDL_KeyboardEvent *event, t_app *app, int *changed)
+int     on_key_press(int key, t_app *app)
 {
-	if (event->keysym.sym == SDLK_ESCAPE)
+    int update;
+
+    update = 0;
+	if (key == KEY_ESC)
 	{
 		app->quit = 1;
-		return ;
+        return (1);
 	}
-	else if (event->keysym.sym == SDLK_1)
+	else if (key == KEY_PLUS && (update = 1))
 		app->ren.iterations += 1;
-	else if (event->keysym.sym == SDLK_0 && app->ren.iterations > 100)
+	else if (key == KEY_MINUS && app->ren.iterations > 0  && (update = 1))
 		app->ren.iterations -= 1;
-	else if (event->keysym.sym == SDLK_LEFT || event->keysym.sym == SDLK_RIGHT)
-		app->ren.offset_x += (double)(event->keysym.sym == SDLK_RIGHT ? 10 : -10)
-		        / app->ren.zoom;
-	else if (event->keysym.sym == SDLK_DOWN || event->keysym.sym == SDLK_UP)
-		app->ren.offset_y += (double)(event->keysym.sym == SDLK_DOWN ? 10 : -10)
-		        / app->ren.zoom;
-	*changed = 1;
+	else if (key == KEY_LEFT || key == KEY_RIGHT && (update = 1))
+		app->ren.offset_x += (key == KEY_RIGHT ? 10.0l : -10.0l) / app->ren.zoom;
+	else if (key == KEY_DOWN || key == KEY_UP && (update = 1))
+		app->ren.offset_y += (key == KEY_UP ? 10 : -10.0l) / app->ren.zoom;
+    update ? app_render(app) : 0;
+    return (1);
 }
