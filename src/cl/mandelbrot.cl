@@ -5,34 +5,32 @@ __kernel void mandelbrot(
 		const float zoom,
 		const float mouse_x,
 		const float mouse_y,
-		const float offset_x,
-		const float offset_y,
+        const double offset_x,
+        const double offset_y,
 		const int   width,
 		const int   height,
-		const int   iterations,
+		int   iterations,
 		__global int         *result
 )
 {
-	int 		id;
-	int 		x;
-	int 		y;
-	int 		i;
-	t_complex 	c;
-	t_complex 	z;
-
-	id = get_global_id(0);
-	x = id % width;
-	y = id / width;
-	i = 0;
-	c = (t_complex){
-		1.5 * (x - width  / 2) / (0.5 * zoom * width)  + offset_x,
-		1 * (y - height / 2) / (0.5 * zoom * height) + offset_y
-	};
-	z = c;
-	while (c_abs(z).r <= 2 && i < iterations)
+    int 		i;
+    t_complex 	c;
+    t_complex 	z;
+    double2     point;
+    point.x = get_global_id(0) % width - width  / 2;
+    point.y = get_global_id(0) / width - height / 2;
+    point /= zoom;
+    point.x += offset_x;
+    point.y += offset_y;
+    point.x *= -2.5l / ((double)width / 2);
+    point.y *= 1.0l / ((double)height / 2);
+    i = 0;
+    c = (t_complex){point.x, point.y};
+    z = c;
+    while (c_abs(z).r <= 2 && i < iterations)
 	{
-		z = c_add(c_mul(z, z), c);
-		i++;
+        z = c_add(c_mul(z, z), c);
+        i++;
 	}
 	result[id] = iteration_to_color(i, iterations);
 }
