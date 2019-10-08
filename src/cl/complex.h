@@ -3,8 +3,8 @@
 
 typedef struct s_complex
 {
-	float r;
-	float i;
+	double r;
+    double i;
 
 } t_complex;
 
