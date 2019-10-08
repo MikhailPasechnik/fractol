@@ -75,8 +75,8 @@ static int set_kernel_args(t_renderer *ren)
 	err = clSetKernelArg(ren->kernel, 0, sizeof(cl_float), &ren->zoom);
 	err |= clSetKernelArg(ren->kernel, 1, sizeof(cl_float), &ren->mouse_x);
 	err |= clSetKernelArg(ren->kernel, 2, sizeof(cl_float), &ren->mouse_y);
-	err |= clSetKernelArg(ren->kernel, 3, sizeof(cl_float), &ren->offset_x);
-	err |= clSetKernelArg(ren->kernel, 4, sizeof(cl_float), &ren->offset_y);
+	err |= clSetKernelArg(ren->kernel, 3, sizeof(cl_double), &ren->offset_x);
+	err |= clSetKernelArg(ren->kernel, 4, sizeof(cl_double), &ren->offset_y);
 	err |= clSetKernelArg(ren->kernel, 5, sizeof(cl_int), &ren->width);
 	err |= clSetKernelArg(ren->kernel, 6, sizeof(cl_int), &ren->height);
 	err |= clSetKernelArg(ren->kernel, 7, sizeof(cl_int), &ren->iterations);
