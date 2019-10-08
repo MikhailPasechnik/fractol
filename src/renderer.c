@@ -15,6 +15,7 @@
 int new_renderer(const char *name, t_renderer *ren, t_ocl *ocl)
 {
 	int			err;
+	char        *log;
 
 	if (!pick_fractal(name, ren))
 	{
@@ -26,12 +27,20 @@ int new_renderer(const char *name, t_renderer *ren, t_ocl *ocl)
 	if (!ren->program || OCL_ERROR(clBuildProgram(
 			ren->program, 0, NULL, FCL_INCLUDE, NULL, NULL),
 					"Failed to build program"))
-		return (0);
+	{
+        log = ocl_get_build_log(ren->program, ocl->device);
+        if (log)
+        {
+            ft_putendl_fd(log, 2);
+            free(log);
+        }
+        return (0);
+    }
 	ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);
 	if (OCL_ERROR(err, "Failed to create kernel"))
 		return (0);
-	ren->queue = clCreateCommandQueue(ocl->context,
-			ocl->device, NULL, &err);
+	ren->queue = clCreateCommandQueueWithProperties(ocl->context,
+			ocl->device, 0, &err);
 	if (OCL_ERROR(err, "Failed to create queue"))
 		return (0);
 	ren->zoom = ZOOM;
