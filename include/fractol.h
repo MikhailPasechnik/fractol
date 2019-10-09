@@ -17,7 +17,6 @@
 # include <stdio.h>
 
 # include "libft.h"
-# include "keys.h"
 # include "ocl.h"
 # include "mlx.h"
 
@@ -53,7 +52,7 @@
 #  include <X11/X.h>
 #  include <X11/keysym.h>
 #  define X_ON_KEY KeyPress, KeyPressMask
-#  define X_ON_MOUSE_MOVE MotionNotify, 0
+#  define X_ON_MOUSE_MOVE MotionNotify, PointerMotionMask
 #  define KEY_PLUS XK_equal
 #  define KEY_MINUS XK_minus
 #  define KEY_W 119
@@ -67,11 +66,11 @@
 #  define KEY_Y 121
 #  define KEY_U 117
 #  define KEY_V 118
-#  define KEY_UP 62
-#  define KEY_LEFT 62
-#  define KEY_RIGHT 66
-#  define KEY_DOWN 68
-#  define KEY_ESC 65307
+#  define KEY_UP XK_Up
+#  define KEY_LEFT XK_Left
+#  define KEY_RIGHT XK_Right
+#  define KEY_DOWN XK_Down
+#  define KEY_ESC XK_Escape
 # endif
 
 # define HELP_ARG "help"
