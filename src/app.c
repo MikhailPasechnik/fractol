@@ -17,26 +17,24 @@ int app_render(t_app *app)
 	app->ren.width = app->win_w;
 	app->ren.height = app->win_h;
 	if (!render(&app->ren, &app->ocl, app->pixel_ptr))
-	{
 		return (0);
-	}
+	mlx_clear_window(app->mlx, app->win);
 	mlx_put_image_to_window(app->mlx, app->win, app->img, 0, 0);
 	return (1);
 }
 
-static int  app_loop(t_app *app)
+static int on_win_close(t_app *app)
 {
-	return (1);
+	app_finish(app);
+	exit(0);
 }
 
 static void app_connect_events(t_app *app)
 {
 	mlx_hook(app->win, X_ON_KEY, &on_key_press, app);
-//    mlx_hook(app->win, 4, 0, &mouse_press, &app);
-//    mlx_hook(app->win, 5, 0, &mouse_release, &app);
+	mlx_hook(app->win, X_ON_WIN_CLOSE, &on_win_close, app);
 	mlx_hook(app->win, X_ON_MOUSE_MOVE, &on_mouse_move, app);
-	mlx_loop_hook(app->win, &app_loop, app);
-//    mlx_hook(app->win, , 0, &app_loop, app);
+	mlx_hook(app->win, X_ON_MOUSE_WHEEL, &on_mouse_wheel, app);
 }
 
 int		app_start(t_app *app, const char *fractal_name, void *mlx)
@@ -73,8 +71,10 @@ int		app_start(t_app *app, const char *fractal_name, void *mlx)
 
 void	app_finish(t_app *app)
 {
-	app->win ? mlx_destroy_image(app->mlx, app->img) : 0;
+	app->img ? mlx_destroy_image(app->mlx, app->img) : 0;
 	app->win ? mlx_destroy_window(app->mlx, app->win) : 0;
 	delete_renderer(&app->ren);
 	ocl_release(&app->ocl);
+	free(app->mlx);
+	exit(0);
 }
