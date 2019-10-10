@@ -47,10 +47,10 @@ static int		read_files(const char **file_names, size_t count,
 
 	if (!(*content = malloc(sizeof(**content) * count)) ||
 		!(*size = malloc(sizeof(**size) * count)))
-    {
-        *content ? free(*content) : 0;
-        return 0;
-    }
+	{
+		*content ? free(*content) : 0;
+		return 0;
+	}
 	i = 0;
 	while (i < count)
 	{

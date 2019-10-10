@@ -4,8 +4,7 @@
 typedef struct s_complex
 {
 	double r;
-    double i;
-
+	double i;
 } t_complex;
 
 t_complex c_add(t_complex a, t_complex b);

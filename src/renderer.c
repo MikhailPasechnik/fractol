@@ -28,14 +28,14 @@ int new_renderer(const char *name, t_renderer *ren, t_ocl *ocl)
 			ren->program, 0, NULL, FCL_INCLUDE, NULL, NULL),
 					"Failed to build program"))
 	{
-        log = ocl_get_build_log(ren->program, ocl->device);
-        if (log)
-        {
-            ft_putendl_fd(log, 2);
-            free(log);
-        }
-        return (0);
-    }
+		log = ocl_get_build_log(ren->program, ocl->device);
+		if (log)
+		{
+			ft_putendl_fd(log, 2);
+			free(log);
+		}
+		return (0);
+	}
 	ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);
 	if (OCL_ERROR(err, "Failed to create kernel"))
 		return (0);
@@ -70,7 +70,7 @@ static int	pre_render(t_renderer *ren, t_ocl *ocl)
 	{
 		ren->out_w = ren->height;
 		ren->out_h = ren->width;
-        ren->out_mem ? clReleaseMemObject(ren->out_mem) : 0;
+		ren->out_mem ? clReleaseMemObject(ren->out_mem) : 0;
 		ren->out_mem = clCreateBuffer(ocl->context, CL_MEM_READ_WRITE,
 				sizeof(cl_int) * ren->out_w * ren->out_h, NULL, &err);
 	}
