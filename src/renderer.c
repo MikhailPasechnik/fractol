@@ -39,7 +39,7 @@ int new_renderer(const char *name, t_renderer *ren, t_ocl *ocl)
 	ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);
 	if (OCL_ERROR(err, "Failed to create kernel"))
 		return (0);
-	ren->queue = clCreateCommandQueueWithProperties(ocl->context,
+	ren->queue = clCreateCommandQueue(ocl->context,
 			ocl->device, 0, &err);
 	if (OCL_ERROR(err, "Failed to create queue"))
 		return (0);
