@@ -5,30 +5,34 @@ __kernel void julia(
 		const float zoom,
 		const float mouse_x,
 		const float mouse_y,
-		const float offset_x,
-		const float offset_y,
+		const double offset_x,
+		const double offset_y,
 		const int   width,
 		const int   height,
 		const int   iterations,
 		__global int         *result
 )
 {
-	int 		id;
-	int 		x;
-	int 		y;
 	int 		i;
+	int         id;
 	t_complex 	c;
 	t_complex 	z;
+	double2     point;
 
 	id = get_global_id(0);
-	x = id % width;
-	y = id / width;
+	point.x = id % width - width  / 2;
+	point.y = id / width - height / 2;
+	point /= zoom;
+	point.x += offset_x;
+	point.y += offset_y;
+	point.x *= -2.5 / ((double)width / 2);
+	point.y *= 1.0 / ((double)height / 2);
 	i = 0;
-	c = (t_complex){mouse_x / 200.0, mouse_y / 200.0};
-	z = (t_complex){
-			1.5 * (x - width  / 2) / (0.5 * zoom * width)  + offset_x,
-			1 * (y - height / 2) / (0.5 * zoom * height) + offset_y
+	c = (t_complex){
+		mouse_x / ((double)width / 2),
+		mouse_y / ((double)width / 2)
 	};
+	z = (t_complex){point.x, point.y};
 	while (c_abs(z).r <= 2 && i < iterations)
 	{
 		z = c_add(c_mul(z, z), c);
