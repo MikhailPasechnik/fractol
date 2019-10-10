@@ -9,7 +9,7 @@ __kernel void mandelbrot(
         const double offset_y,
 		const int   width,
 		const int   height,
-		int   iterations,
+		const int   iterations,
 		__global int         *result
 )
 {
