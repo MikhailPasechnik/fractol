@@ -1,16 +1,15 @@
 #ifndef OCL_H
-# define OCL_H
-# define CL_TARGET_OPENCL_VERSION 220
 #ifdef __APPLE__
 	# include <OpenCL/opencl.h>
 #else
 	# include <CL/opencl.h>
 #endif
-
 # include <fcntl.h>
 # include <errno.h>
-
 # include "libft.h"
+
+# define OCL_H
+# define CL_TARGET_OPENCL_VERSION 220
 
 cl_device_id	ocl_create_device();
 cl_program		ocl_create_program(cl_context ctx, const char **file_names, size_t count);

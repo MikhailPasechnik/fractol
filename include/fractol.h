@@ -15,78 +15,89 @@
 
 # include <math.h>
 # include <stdio.h>
-
 # include "libft.h"
 # include "ocl.h"
 # include "mlx.h"
 
-# define WIN_WIDTH 500
-# define WIN_HEIGHT 300
-# define WIN_FLAGS SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
-# define ITERATIONS 100;
-# define ZOOM 1;
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
+# define ITERATIONS 200
+# define ZOOM 1
 
+
+/*
+** Key codes
+*/
 # ifdef __APPLE__
-#  define X_ON_KEY 2, 0
-#  define X_ON_MOUSE_MOVE 6, 0
-#  define KEY_PLUS 69
-#  define KEY_MINUS 78
-#  define KEY_W 13
-#  define KEY_A 0
-#  define KEY_S 1
-#  define KEY_D 2
-#  define KEY_Q 12
-#  define KEY_E 14
-#  define KEY_R 15
-#  define KEY_T 17
-#  define KEY_Y 16
-#  define KEY_U 32
-#  define KEY_V 9
-#  define KEY_UP 126
-#  define KEY_LEFT 123
-#  define KEY_RIGHT 124
-#  define KEY_DOWN 125
-#  define KEY_ESC 53
+	# define X_ON_KEY 2, 0
+	# define X_ON_MOUSE_MOVE 6, 0
+	# define X_ON_MOUSE_WHEEL 4, 0
+	# define X_ON_WIN_CLOSE 17, 0
+	# define KEY_PLUS 69
+	# define KEY_MINUS 78
+	# define KEY_W 13
+	# define KEY_A 0
+	# define KEY_S 1
+	# define KEY_D 2
+	# define KEY_Q 12
+	# define KEY_E 14
+	# define KEY_R 15
+	# define KEY_T 17
+	# define KEY_Y 16
+	# define KEY_U 32
+	# define KEY_V 9
+	# define KEY_UP 125
+	# define KEY_LEFT 123
+	# define KEY_RIGHT 124
+	# define KEY_DOWN 126
+	# define KEY_ESC 53
 # else
-
-#  include <X11/X.h>
-#  include <X11/keysym.h>
-#  define X_ON_KEY KeyPress, KeyPressMask
-#  define X_ON_MOUSE_MOVE MotionNotify, PointerMotionMask
-#  define KEY_PLUS XK_equal
-#  define KEY_MINUS XK_minus
-#  define KEY_W 119
-#  define KEY_A 97
-#  define KEY_S 115
-#  define KEY_D 100
-#  define KEY_Q 113
-#  define KEY_E 101
-#  define KEY_R 114
-#  define KEY_T 116
-#  define KEY_Y 121
-#  define KEY_U 117
-#  define KEY_V 118
-#  define KEY_UP XK_Up
-#  define KEY_LEFT XK_Left
-#  define KEY_RIGHT XK_Right
-#  define KEY_DOWN XK_Down
-#  define KEY_ESC XK_Escape
+	# include <X11/X.h>
+	# include <X11/keysym.h>
+	# define X_ON_KEY KeyPress, KeyPressMask
+	# define X_ON_MOUSE_MOVE MotionNotify, PointerMotionMask
+	# define X_ON_MOUSE_WHEEL 4, 0
+	# define X_ON_WIN_CLOSE 17, 0
+	# define KEY_PLUS XK_equal
+	# define KEY_MINUS XK_minus
+	# define KEY_W 119
+	# define KEY_A 97
+	# define KEY_S 115
+	# define KEY_D 100
+	# define KEY_Q 113
+	# define KEY_E 101
+	# define KEY_R 114
+	# define KEY_T 116
+	# define KEY_Y 121
+	# define KEY_U 117
+	# define KEY_V 118
+	# define KEY_UP XK_Up
+	# define KEY_LEFT XK_Left
+	# define KEY_RIGHT XK_Right
+	# define KEY_DOWN XK_Down
+	# define KEY_ESC XK_Escape
 # endif
 
+
+/*
+** Usage
+*/
 # define HELP_ARG "help"
 # define USAGE "./fractol "HELP_ARG
 # define HELP "./fractol mandelbrot | julia"
 
+
+/*
+** Fractal source setup
+*/
 # define MANDELBROT "mandelbrot"
 # define JULIA "julia"
-
 # ifdef __APPLE__
 	# define FCL_INCLUDE "-I src/cl"
 # else
 	# define FCL_INCLUDE "-I./src/cl"
 # endif
 # define FCL_SRC "src/cl/complex.cl src/cl/utils.cl"
-
 # define MANDELBROT_SRC FCL_SRC" src/cl/"MANDELBROT".cl"
 # define JULIA_SRC FCL_SRC" src/cl/"JULIA".cl"
 
@@ -126,9 +137,6 @@ typedef struct	s_app
 	int					win_w;
 	int					win_h;
 
-	int 				quit;
-	int                 changed;
-
 	t_renderer			ren;
 	t_ocl				ocl;
 }				t_app;
@@ -160,7 +168,7 @@ int				pick_fractal(const char *name, t_renderer *ren);
 ** Event functions
 */
 int     on_mouse_move(int x, int y, t_app *app);
-int     on_mouse_wheel(int x, int y, t_app *app);
+int     on_mouse_wheel(int btn, int x, int y, t_app *app);
 int     on_key_press(int key, t_app *app);
 
 #endif
