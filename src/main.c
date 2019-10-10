@@ -24,19 +24,19 @@ int main(int argc, char **argv)
 		ft_putendl(HELP);
 	else
 	{
-	    if (!(mlx = mlx_init()))
-        {
-	        ft_putendl_fd("Failed to initialise mlx", 2);
-	        exit(1);
-        }
+		if (!(mlx = mlx_init()))
+		{
+			ft_putendl_fd("Failed to initialise mlx", 2);
+			exit(1);
+		}
 		if (!app_start(&app, argv[1], mlx))
 			app_finish(&app);
 		else
 		{
-            mlx_loop(mlx);
+			mlx_loop(mlx);
 			app_finish(&app);
 		}
-        free(mlx);
-    }
+		free(mlx);
+	}
 	return (0);
 }

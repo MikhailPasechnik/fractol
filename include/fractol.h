@@ -103,8 +103,8 @@ typedef struct	s_renderer
 	cl_float			zoom;
 	cl_float			mouse_x;
 	cl_float			mouse_y;
-    cl_double	        offset_x;
-    cl_double			offset_y;
+	cl_double	        offset_x;
+	cl_double			offset_y;
 	cl_int				width;
 	cl_int				height;
 	cl_int				iterations;
@@ -116,7 +116,7 @@ typedef struct	s_renderer
 
 typedef struct	s_app
 {
-    void		        *mlx;
+	void		        *mlx;
 	void                *win;
 	void                *img;
 	void                *pixel_ptr;

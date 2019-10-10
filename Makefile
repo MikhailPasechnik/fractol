@@ -56,11 +56,11 @@ LIBS		:=	./libft/libft.a -lm
 ifeq ($(OS),Linux)
 	LIBS	:= $(LIBS) -lOpenCL
 	MINILIBX_DIR=./minilibx
-    MINILIBX_LINK=-L$(MINILIBX_DIR) -lmlx -lXext -lX11
+	MINILIBX_LINK=-L$(MINILIBX_DIR) -lmlx -lXext -lX11
 else
 	LIBS	:= $(LIBS) -framework OpenCL
-    MINILIBX_DIR=./minilibx_macos
-    MINILIBX_LINK=-L$(MINILIBX_DIR) -lmlx -framework OpenGL -framework AppKit
+	MINILIBX_DIR=./minilibx_macos
+	MINILIBX_LINK=-L$(MINILIBX_DIR) -lmlx -framework OpenGL -framework AppKit
 endif
 MINILIBX=$(MINILIBX_DIR)/libmix.a
 
