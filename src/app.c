@@ -18,7 +18,8 @@ int app_render(t_app *app)
 	app->ren.height = app->win_h;
 	if (!render(&app->ren, &app->ocl, app->pixel_ptr))
 		return (0);
-	mlx_clear_window(app->mlx, app->win);
+	if (APPLE)
+    	mlx_clear_window(app->mlx, app->win);
 	mlx_put_image_to_window(app->mlx, app->win, app->img, 0, 0);
 	return (1);
 }
@@ -35,6 +36,7 @@ static void app_connect_events(t_app *app)
 	mlx_hook(app->win, X_ON_WIN_CLOSE, &on_win_close, app);
 	mlx_hook(app->win, X_ON_MOUSE_MOVE, &on_mouse_move, app);
 	mlx_hook(app->win, X_ON_MOUSE_WHEEL, &on_mouse_wheel, app);
+    mlx_loop_hook(app->mlx, animation_loop_callback, app);
 }
 
 int		app_start(t_app *app, const char *fractal_name, void *mlx)
