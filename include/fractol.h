@@ -19,9 +19,9 @@
 # include "ocl.h"
 # include "mlx.h"
 
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
-# define ITERATIONS 200
+# define WIN_WIDTH 840
+# define WIN_HEIGHT 480
+# define ITERATIONS 50
 # define ZOOM 1
 
 
@@ -29,6 +29,7 @@
 ** Key codes
 */
 # ifdef __APPLE__
+    # define APPLE 1
 	# define X_ON_KEY 2, 0
 	# define X_ON_MOUSE_MOVE 6, 0
 	# define X_ON_MOUSE_WHEEL 4, 0
@@ -52,6 +53,7 @@
 	# define KEY_DOWN 126
 	# define KEY_ESC 53
 # else
+    # define APPLE 0
 	# include <X11/X.h>
 	# include <X11/keysym.h>
 	# define X_ON_KEY KeyPress, KeyPressMask
@@ -139,6 +141,9 @@ typedef struct	s_app
 
 	t_renderer			ren;
 	t_ocl				ocl;
+
+	long long           time;
+    void (*animation_callback)(struct s_app *);
 }				t_app;
 
 /*
@@ -170,5 +175,11 @@ int				pick_fractal(const char *name, t_renderer *ren);
 int     on_mouse_move(int x, int y, t_app *app);
 int     on_mouse_wheel(int btn, int x, int y, t_app *app);
 int     on_key_press(int key, t_app *app);
+
+/*
+** Animation bonus
+*/
+int     animation_loop_callback(t_app *app);
+void    julia_animation_callback(t_app  *app);
 
 #endif
