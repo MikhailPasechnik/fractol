@@ -36,6 +36,7 @@ __kernel void julia(
 	while (c_abs(z).r <= 2 && i < iterations)
 	{
 		z = c_add(c_mul(z, z), c);
+//		z.i = tan(z.i) + z.i;
 		i++;
 	}
 	result[id] = iteration_to_color(i, iterations);

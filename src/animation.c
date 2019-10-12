@@ -19,13 +19,27 @@ int animation_loop_callback(t_app *app)
     if (current_timestamp() - app->time < 25)
         return (1);
     app->animation_callback(app);
+	app->time = current_timestamp();
     return (1);
 }
 
 void julia_animation_callback(t_app  *app)
 {
-    app->ren.mouse_y = (sin((double)app->time / 11000)) * 250;
-    app->ren.mouse_x = (cos((double)app->time / 6000)) * 250;
-    app->time = current_timestamp();
+    app->ren.mouse_y = (sin((double)app->time / 11000)) * (WIN_HEIGHT / 5);
+    app->ren.mouse_x = (tan((double)(app->time + 25) / 6000)) * (WIN_WIDTH / 5);
+    app_render(app);
+}
+
+void julia_animation_callback1(t_app  *app)
+{
+    app->ren.mouse_y = (sin((double)app->time / 11000)) * (WIN_HEIGHT / 4);
+    app->ren.mouse_x = (cos((double)(app->time + 25) / 6000)) * (WIN_WIDTH / 4);
+    app_render(app);
+}
+
+void julia_animation_callback2(t_app  *app)
+{
+    app->ren.mouse_y = -(atan((double)app->time / 12000)) * (WIN_HEIGHT / 5);
+    app->ren.mouse_x = (tan((double)(app->time + 25) / 11000)) * (WIN_WIDTH / 5);
     app_render(app);
 }

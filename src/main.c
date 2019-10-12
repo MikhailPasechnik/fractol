@@ -33,7 +33,6 @@ int main(int argc, char **argv)
 			app_finish(&app);
 		else
 		{
-		    app.animation_callback = julia_animation_callback;
 			mlx_loop(mlx);
 			app_finish(&app);
 		}
