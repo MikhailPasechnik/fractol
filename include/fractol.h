@@ -36,17 +36,18 @@
 	# define X_ON_WIN_CLOSE 17, 0
 	# define KEY_PLUS 69
 	# define KEY_MINUS 78
-	# define KEY_W 13
-	# define KEY_A 0
-	# define KEY_S 1
-	# define KEY_D 2
-	# define KEY_Q 12
-	# define KEY_E 14
-	# define KEY_R 15
-	# define KEY_T 17
-	# define KEY_Y 16
-	# define KEY_U 32
-	# define KEY_V 9
+
+	# define KEY_1 18
+	# define KEY_2 19
+	# define KEY_3 20
+	# define KEY_4 21
+	# define KEY_5 23
+	# define KEY_6 22
+	# define KEY_7 26
+	# define KEY_8 28
+	# define KEY_9 25
+	# define KEY_0 29
+
 	# define KEY_UP 125
 	# define KEY_LEFT 123
 	# define KEY_RIGHT 124
@@ -62,17 +63,18 @@
 	# define X_ON_WIN_CLOSE 17, 0
 	# define KEY_PLUS XK_equal
 	# define KEY_MINUS XK_minus
-	# define KEY_W 119
-	# define KEY_A 97
-	# define KEY_S 115
-	# define KEY_D 100
-	# define KEY_Q 113
-	# define KEY_E 101
-	# define KEY_R 114
-	# define KEY_T 116
-	# define KEY_Y 121
-	# define KEY_U 117
-	# define KEY_V 118
+
+	# define KEY_1 18
+	# define KEY_2 19
+	# define KEY_3 20
+	# define KEY_4 21
+	# define KEY_5 23
+	# define KEY_6 22
+	# define KEY_7 26
+	# define KEY_8 28
+	# define KEY_9 25
+	# define KEY_0 29
+
 	# define KEY_UP XK_Up
 	# define KEY_LEFT XK_Left
 	# define KEY_RIGHT XK_Right
@@ -181,5 +183,7 @@ int     on_key_press(int key, t_app *app);
 */
 int     animation_loop_callback(t_app *app);
 void    julia_animation_callback(t_app  *app);
+void    julia_animation_callback1(t_app  *app);
+void    julia_animation_callback2(t_app  *app);
 
 #endif

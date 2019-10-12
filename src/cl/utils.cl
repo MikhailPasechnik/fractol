@@ -32,7 +32,7 @@ int	iteration_to_color(int iteration, int iteration_max)
 	hsv_to_rgb(
 		255 * iteration / iteration_max,
 		255,
-		iteration < iteration_max ? 255 : 0,
+		iteration < iteration_max ? 1 : 0,
 		hsv
 	);
 	return ((((hsv[2] << 8u) + hsv[1]) << 8u) + hsv[0]);
