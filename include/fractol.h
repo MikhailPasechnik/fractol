@@ -124,6 +124,11 @@ typedef struct	s_renderer
 	cl_int				height;
 	cl_int				iterations;
 
+	cl_mem              gradient_mem;
+	cl_uchar4           *gradient;
+	cl_uint             gradient_len;
+
+
 	cl_mem				out_mem;
 	int					out_w;
 	int					out_h;
@@ -167,7 +172,8 @@ int				render(t_renderer *ren, t_ocl *ocl, cl_int *result);
 /*
 ** Utils functions
 */
-size_t			tab_len(const char **tab);
+size_t			tab_len(char **tab);
+void            *tab_free(char **tab);
 int				pick_fractal(const char *name, t_renderer *ren);
 
 
@@ -185,5 +191,10 @@ int     animation_loop_callback(t_app *app);
 void    julia_animation_callback(t_app  *app);
 void    julia_animation_callback1(t_app  *app);
 void    julia_animation_callback2(t_app  *app);
+
+/*
+** Gradient
+*/
+cl_uchar4   *gradient_from_str(char *gradient);
 
 #endif

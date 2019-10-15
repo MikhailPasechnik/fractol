@@ -68,9 +68,21 @@ static int	pre_render(t_renderer *ren, t_ocl *ocl)
 	err = 0;
 	if (!ren->out_mem || ren->width != ren->out_w || ren->height != ren->out_h)
 	{
-		ren->out_w = ren->height;
-		ren->out_h = ren->width;
-		ren->out_mem ? clReleaseMemObject(ren->out_mem) : 0;
+	    // TODO:
+        ren->gradient = gradient_from_str("4 218 255 0,22 182 239 28,57 152 208 53,164 100 179 84,224 23 218 90,255 250 0 91,255 207 0 100");
+        ren->gradient_len = 0;
+        while (ren->gradient[ren->gradient_len].w != 100)
+            ren->gradient_len++;
+        ren->gradient_len++;
+        printf("gradient_len: %d\n", ren->gradient_len);
+        ren->gradient_mem ? clReleaseMemObject(ren->gradient_mem) : 0;
+        ren->gradient_mem = clCreateBuffer(ocl->context, CL_MEM_READ_ONLY, sizeof(cl_uchar4) * ren->gradient_len, NULL, &err);
+        err |= clEnqueueWriteBuffer(ren->queue, ren->gradient_mem, CL_TRUE, 0, sizeof(cl_uchar4) * ren->gradient_len, ren->gradient, 0, NULL, NULL);
+        //
+
+        ren->out_w = ren->height;
+        ren->out_h = ren->width;
+        ren->out_mem ? clReleaseMemObject(ren->out_mem) : 0;
 		ren->out_mem = clCreateBuffer(ocl->context, CL_MEM_READ_WRITE,
 				sizeof(cl_int) * ren->out_w * ren->out_h, NULL, &err);
 	}
@@ -89,7 +101,9 @@ static int set_kernel_args(t_renderer *ren)
 	err |= clSetKernelArg(ren->kernel, 5, sizeof(cl_int), &ren->width);
 	err |= clSetKernelArg(ren->kernel, 6, sizeof(cl_int), &ren->height);
 	err |= clSetKernelArg(ren->kernel, 7, sizeof(cl_int), &ren->iterations);
-	err |= clSetKernelArg(ren->kernel, 8, sizeof(ren->out_mem), &ren->out_mem);
+	err |= clSetKernelArg(ren->kernel, 8, sizeof(cl_uint), &ren->gradient_len);
+    err |= clSetKernelArg(ren->kernel, 9, sizeof(ren->gradient_mem), &ren->gradient_mem);
+    err |= clSetKernelArg(ren->kernel, 10, sizeof(ren->out_mem), &ren->out_mem);
 	return (OCL_ERROR(err, "Failed to set kernel args!") ? 0 : 1);
 }
 

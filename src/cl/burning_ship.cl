@@ -10,6 +10,8 @@ __kernel void burning_ship(
 		const int   width,
 		const int   height,
 		const int   iterations,
+        uint        gradient_len,
+        __global uchar4      *gradient,
 		__global int         *result
 )
 {
@@ -41,5 +43,5 @@ __kernel void burning_ship(
 		z.r = fabs(temp);
 		i++;
 	}
-	result[id] = iteration_to_color(i, iterations);
+	result[id] = iteration_to_color(i, iterations, gradient, uint gradient_len);
 }

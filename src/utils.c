@@ -12,7 +12,7 @@
 
 #include "fractol.h"
 
-size_t			tab_len(const char **tab)
+size_t			tab_len(char **tab)
 {
 	size_t len;
 
@@ -24,11 +24,22 @@ size_t			tab_len(const char **tab)
 	return (len);
 }
 
+void            *tab_free(char **tab)
+{
+    int i;
+
+    i = 0;
+    while (tab[i])
+        free(tab[i++]);
+    free(tab);
+    return (NULL);
+}
+
 static void		set_fractal(const char *name, const char *src, t_renderer *ren)
 {
 	ren->kernel_name = ft_strdup(name);
 	ren->src = ft_strsplit_any(src, " \n");
-	ren->src_count = tab_len((const char **)ren->src);
+	ren->src_count = tab_len(ren->src);
 }
 
 int				pick_fractal(const char *name, t_renderer *ren)

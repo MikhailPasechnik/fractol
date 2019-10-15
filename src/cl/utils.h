@@ -7,6 +7,6 @@ typedef struct  s_frgb
 	float g;
 	float b;
 }               t_frgb;
-int	iteration_to_color(int iteration, int iteration_max);
+int	iteration_to_color(double iteration, double iteration_max, __global uchar4 *gradient, uint gradient_len);
 
 #endif

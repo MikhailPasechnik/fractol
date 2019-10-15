@@ -10,6 +10,8 @@ __kernel void mandelbrot(
 		const int   width,
 		const int   height,
 		const int   iterations,
+        uint     gradient_len,
+        __global uchar4      *gradient,
 		__global int         *result
 )
 {
@@ -35,5 +37,5 @@ __kernel void mandelbrot(
 		z = c_add(c_mul(z, z), c);
 		i++;
 	}
-	result[id] = iteration_to_color(i, iterations);
+	result[id] = iteration_to_color(i, iterations, gradient, uint gradient_len);
 }
