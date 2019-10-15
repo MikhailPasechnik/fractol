@@ -64,16 +64,16 @@
 	# define KEY_PLUS XK_equal
 	# define KEY_MINUS XK_minus
 
-	# define KEY_1 18
-	# define KEY_2 19
-	# define KEY_3 20
-	# define KEY_4 21
-	# define KEY_5 23
-	# define KEY_6 22
-	# define KEY_7 26
-	# define KEY_8 28
-	# define KEY_9 25
-	# define KEY_0 29
+	# define KEY_1 XK_1
+	# define KEY_2 XK_2
+	# define KEY_3 XK_3
+	# define KEY_4 XK_4
+	# define KEY_5 XK_5
+	# define KEY_6 XK_6
+	# define KEY_7 XK_7
+	# define KEY_8 XK_8
+	# define KEY_9 XK_9
+	# define KEY_0 XK_0
 
 	# define KEY_UP XK_Up
 	# define KEY_LEFT XK_Left
