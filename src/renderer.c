@@ -53,6 +53,8 @@ int new_renderer(const char *name, t_renderer *ren, t_ocl *ocl)
 void    delete_renderer(t_renderer *ren)
 {
 	ren->queue ? clReleaseCommandQueue(ren->queue) : 0;
+	ren->out_mem ? clReleaseMemObject(ren->out_mem) : 0;
+	ren->gradient_mem ? clReleaseMemObject(ren->gradient_mem) : 0;
 	ren->kernel ? clReleaseKernel(ren->kernel) : 0;
 	ren->program ? clReleaseProgram(ren->program) : 0;
 	ren->kernel_name ? ft_strdel(&ren->kernel_name) : 0;
@@ -68,18 +70,6 @@ static int	pre_render(t_renderer *ren, t_ocl *ocl)
 	err = 0;
 	if (!ren->out_mem || ren->width != ren->out_w || ren->height != ren->out_h)
 	{
-	    // TODO:
-        ren->gradient = gradient_from_str("4 218 255 0,22 182 239 28,57 152 208 53,164 100 179 84,224 23 218 90,255 250 0 91,255 207 0 100");
-        ren->gradient_len = 0;
-        while (ren->gradient[ren->gradient_len].w != 100)
-            ren->gradient_len++;
-        ren->gradient_len++;
-        printf("gradient_len: %d\n", ren->gradient_len);
-        ren->gradient_mem ? clReleaseMemObject(ren->gradient_mem) : 0;
-        ren->gradient_mem = clCreateBuffer(ocl->context, CL_MEM_READ_ONLY, sizeof(cl_uchar4) * ren->gradient_len, NULL, &err);
-        err |= clEnqueueWriteBuffer(ren->queue, ren->gradient_mem, CL_TRUE, 0, sizeof(cl_uchar4) * ren->gradient_len, ren->gradient, 0, NULL, NULL);
-        //
-
         ren->out_w = ren->height;
         ren->out_h = ren->width;
         ren->out_mem ? clReleaseMemObject(ren->out_mem) : 0;
@@ -87,6 +77,23 @@ static int	pre_render(t_renderer *ren, t_ocl *ocl)
 				sizeof(cl_int) * ren->out_w * ren->out_h, NULL, &err);
 	}
 	return (OCL_ERROR(err, "Failed to pre render!") ? 0 : 1);
+}
+
+int set_gradient(t_renderer *ren, t_ocl *ocl, cl_uchar4 *gradient, cl_uint gradient_len)
+{
+    int err;
+
+    ren->gradient = gradient;
+    ren->gradient_len = gradient_len;
+    ren->gradient_mem ? clReleaseMemObject(ren->gradient_mem) : 0;
+    ren->gradient_mem = clCreateBuffer(
+            ocl->context, CL_MEM_READ_ONLY,
+            sizeof(cl_uchar4) * ren->gradient_len, NULL, &err);
+    err |= clEnqueueWriteBuffer(
+            ren->queue, ren->gradient_mem, CL_TRUE, 0,
+            sizeof(cl_uchar4) * ren->gradient_len,
+            ren->gradient, 0, NULL, NULL);
+    return (OCL_ERROR(err, "Failed to set gradient!") ? 0 : 1);
 }
 
 static int set_kernel_args(t_renderer *ren)

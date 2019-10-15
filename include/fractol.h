@@ -18,9 +18,10 @@
 # include "libft.h"
 # include "ocl.h"
 # include "mlx.h"
+# include "gradient.h"
 
-# define WIN_WIDTH 840
-# define WIN_HEIGHT 480
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
 # define ITERATIONS 50
 # define ZOOM 1
 
@@ -74,6 +75,7 @@
 	# define KEY_8 XK_8
 	# define KEY_9 XK_9
 	# define KEY_0 XK_0
+	# define KEY_G XK_G
 
 	# define KEY_UP XK_Up
 	# define KEY_LEFT XK_Left
@@ -149,6 +151,8 @@ typedef struct	s_app
 	t_renderer			ren;
 	t_ocl				ocl;
 
+	t_gradient          *gradients;
+
 	long long           time;
     void (*animation_callback)(struct s_app *);
 }				t_app;
@@ -167,6 +171,8 @@ int             app_render(t_app *app);
 int				new_renderer(const char *name, t_renderer *ren, t_ocl *ocl);
 void			delete_renderer(t_renderer *ren);
 int				render(t_renderer *ren, t_ocl *ocl, cl_int *result);
+int             set_gradient(t_renderer *ren, t_ocl *ocl,
+        cl_uchar4 *gradient, cl_uint gradient_len);
 
 
 /*
@@ -191,10 +197,5 @@ int     animation_loop_callback(t_app *app);
 void    julia_animation_callback(t_app  *app);
 void    julia_animation_callback1(t_app  *app);
 void    julia_animation_callback2(t_app  *app);
-
-/*
-** Gradient
-*/
-cl_uchar4   *gradient_from_str(char *gradient);
 
 #endif

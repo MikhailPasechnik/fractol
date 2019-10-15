@@ -37,5 +37,5 @@ __kernel void mandelbrot(
 		z = c_add(c_mul(z, z), c);
 		i++;
 	}
-	result[id] = iteration_to_color(i, iterations, gradient, uint gradient_len);
+	result[id] = iteration_to_color(i, iterations, gradient, gradient_len);
 }
