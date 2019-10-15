@@ -43,5 +43,5 @@ __kernel void burning_ship(
 		z.r = fabs(temp);
 		i++;
 	}
-	result[id] = iteration_to_color(i, iterations, gradient, uint gradient_len);
+	result[id] = iteration_to_color(i, iterations, gradient, gradient_len);
 }

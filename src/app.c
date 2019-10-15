@@ -39,6 +39,22 @@ static void app_connect_events(t_app *app)
     mlx_loop_hook(app->mlx, animation_loop_callback, app);
 }
 
+int     app_init_gradients(t_app *app)
+{
+    app->gradients = gradient_from_str("4 218 255 0,22 182 239 10,57 152 208 15,57 152 208 18,164 10 179 25,224 23 218 55,255 250 0 66,255 0 0 100");
+//    app->gradients = gradient_from_str("255 207 0 100,255 250 0 91,224 23 218 90,164 100 179 84,57 152 208 53,22 182 239 28,4 218 255 0");
+    if (!app->gradients)
+        return (0);
+    app->gradients->head = app->gradients;
+    return (set_gradient(&app->ren, &app->ocl, app->gradients->data, app->gradients->len));
+}
+
+int     app_error(t_app* app, char *msg)
+{
+    ft_putendl_fd(msg, 2);
+    return (0);
+}
+
 int		app_start(t_app *app, const char *fractal_name, void *mlx)
 {
 	ft_bzero(app, sizeof(t_app));
@@ -46,25 +62,16 @@ int		app_start(t_app *app, const char *fractal_name, void *mlx)
 	app->win_w = WIN_WIDTH;
 	app->mlx = mlx;
 	if (!(ocl_init(&app->ocl)))
-	{
-		ft_putendl_fd("Failed to initialise OpenCL", 2);
-		return (0);
-	}
+        return (app_error(app, "Failed to initialise OpenCL"));
 	if (!new_renderer(fractal_name, &app->ren, &app->ocl))
-	{
-		ft_putendl_fd("Failed to create renderer", 2);
-		return (0);
-	}
-	if (!(app->win = mlx_new_window(app->mlx, app->win_w, app->win_h, (char *)fractal_name)))
-	{
-		ft_putendl_fd("Failed to create window", 2);
-		return (0);
-	}
+        return (app_error(app, "Failed to create renderer"));
+	if (!app_init_gradients(app))
+        return (app_error(app, "Failed to create gradients"));
+	if (!(app->win = mlx_new_window(app->mlx, app->win_w, app->win_h,
+	        (char *)fractal_name)))
+        return (app_error(app, "Failed to create window"));
 	if (!(app->img = mlx_new_image(app->mlx, app->win_w, app->win_h)))
-	{
-		ft_putendl_fd("Failed to create image", 2);
-		return (0);
-	}
+        return (app_error(app, "Failed to create image"));
 	app->pixel_ptr = mlx_get_data_addr(app->img, &app->bits_per_pixel,
 			&app->size_line, &app->endian);
 	app_connect_events(app);
@@ -76,6 +83,7 @@ void	app_finish(t_app *app)
 	app->img ? mlx_destroy_image(app->mlx, app->img) : 0;
 	app->win ? mlx_destroy_window(app->mlx, app->win) : 0;
 	delete_renderer(&app->ren);
+	app->gradients ? free_gradient_list(&app->gradients->head) : 0;
 	ocl_release(&app->ocl);
 	free(app->mlx);
 	exit(0);

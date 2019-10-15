@@ -22,7 +22,6 @@ int     on_mouse_wheel(int btn, int x, int y, t_app *app)
 
 static int		on_key_press1(int key, t_app *app, int *update)
 {
-	(void)update;
 	if (key == KEY_0)
 		app->animation_callback = NULL;
 	else if (key == KEY_1)
@@ -31,6 +30,7 @@ static int		on_key_press1(int key, t_app *app, int *update)
 		app->animation_callback = julia_animation_callback1;
 	else if (key == KEY_3)
 		app->animation_callback = julia_animation_callback2;
+    else if (key == KEY_G)
 	return (1);
 }
 

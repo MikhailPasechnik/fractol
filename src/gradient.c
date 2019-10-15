@@ -21,27 +21,53 @@ cl_uchar4   parse_pnt(char *str)
     return (pnt);
 }
 
-cl_uchar4    *gradient_from_str(char *gradient)
+void        *free_gradient(t_gradient *g)
+{
+    if (!g)
+        return (NULL);
+    free(g->data);
+    free(g);
+    return (NULL);
+}
+
+void        *free_gradient_list(t_gradient *list)
+{
+    t_gradient *next;
+
+    while (list)
+    {
+        next = list->next;
+        free_gradient(list);
+        list = next;
+    }
+}
+
+t_gradient    *gradient_from_str(char *str)
 {
     size_t      i;
     size_t      len;
-    cl_uchar4   *g;
+    t_gradient  *g;
     char        **split;
 
-    if (!(split = ft_strsplit(gradient, ',')))
+    if (!(g = ft_memalloc(sizeof(t_gradient))))
         return NULL;
+    ft_bzero(g, sizeof(t_gradient));
+    if (!(split = ft_strsplit(str, ',')))
+        return (free_gradient(g));
     len = tab_len(split);
-    if (len < 2 || !(g = ft_memalloc(sizeof(*g) * len))) {
+    if (len < 2 || !(g->data = ft_memalloc(sizeof(*g->data) * len))) {
+        free_gradient(g);
         return (tab_free(split));
     }
+    g->len = len;
     i = 0;
     while (i < len)
     {
-        g[i] = parse_pnt(split[i]);
+        g->data[i] = parse_pnt(split[i]);
         if (i == 0)
-            g[i].w = 0;
+            g->data[i].w = 0;
         else if (i == len -1)
-            g[i].w = 100;
+            g->data[i].w = 100;
         i++;
     }
     return (g);

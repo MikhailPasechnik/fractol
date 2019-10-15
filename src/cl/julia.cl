@@ -10,7 +10,7 @@ __kernel void julia(
 		const int   width,
 		const int   height,
 		const int   iterations,
-        uint     gradient_len,
+        unsigned int gradient_len,
         __global uchar4      *gradient,
 		__global int         *result
 )
@@ -38,22 +38,12 @@ __kernel void julia(
 	while (c_abs(z).r <= 2 && i < iterations)
 	{
 		z = c_add(c_mul(z, z), c);
-//		z.i = tan(z.i) + z.i;
+		z.i = tan(z.i) + z.i;
 		i++;
 	}
-
     double modulus = sqrt(z.r*z.r + z.i*z.i);
     double mu = i + 1 - (log(log(modulus))) / log (2.0);
-    if (id == 0)
-    {
-        int i = 0;
-        while (i < gradient_len)
-        {
-            printf("%d %d %d %d,", gradient[i].x, gradient[i].y, gradient[i].z, gradient[i].w);
-            i++;
-        }
-        printf("\n");
-}
+//
 //    printf("%lf\n", mu);
     result[id] = iteration_to_color(mu, iterations, gradient, gradient_len);
 }
