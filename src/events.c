@@ -31,6 +31,20 @@ static int		on_key_press1(int key, t_app *app, int *update)
 	else if (key == KEY_3)
 		app->animation_callback = julia_animation_callback2;
     else if (key == KEY_G)
+    {
+        if (!app->gradients->next)
+            app->gradients = app->gradients_head;
+        else
+            app->gradients = app->gradients->next;
+        set_gradient(&app->ren, &app->ocl, app->gradients->data, app->gradients->len);
+        *update = 1;
+    }
+    else if (key == XK_o || key == XK_i)
+    {
+        app->ren.zoom += (key == XK_i ? 1.0 : -1.0) * 4.0 * app->ren.zoom / 10.0;
+        app->ren.zoom = app->ren.zoom > 0 ? app->ren.zoom : 1;
+        app_render(app);
+    }
 	return (1);
 }
 
