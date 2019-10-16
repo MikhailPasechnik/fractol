@@ -70,3 +70,30 @@ int		fio_read_files(const char **file_names, size_t count,
     }
     return (i == count);
 }
+
+int     save_image(const char *file_name, unsigned int *data, size_t w, size_t h)
+{
+    int     fd;
+    size_t  y;
+    size_t  i;
+    char    name[FILENAME_MAX];
+
+    if (ft_strlen(file_name) + 4 > FILENAME_MAX)
+        return (0);
+    ft_sprintf(name, "%s.pgm", file_name);
+    if ((fd = open(name, O_RDWR | O_CREAT, 0666)) == -1)
+        return  (0);
+    i = 0;
+    ft_fprintf(fd, "P3\n%zu %zu\n255", w, h);
+    while (i < w * h)
+    {
+        y = i % w;
+        !y ? write(fd, "\n", 1) : 0;
+        ft_fprintf(fd, "%u %u %u ",
+                   data[i] >> 16u & 0xFFu, data[i] >> 8u & 0xFFu, data[i] & 0xFFu);
+        i++;
+    }
+    write(fd, "\n", 1);
+    close(fd);
+    return (1);
+}
