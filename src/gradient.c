@@ -69,8 +69,11 @@ void        *free_gradient_list(t_gradient **list)
 
 inline void     gradient_add(t_gradient **list, t_gradient *g)
 {
-    g->next = *list;
-    *list = g;
+    if (g && list)
+    {
+        g->next = *list;
+        *list = g;
+    }
 }
 
 t_gradient      *gradients_from_str(char *str)
