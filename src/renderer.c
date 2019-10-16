@@ -37,6 +37,7 @@ int new_renderer(const char *name, t_renderer *ren, t_ocl *ocl)
 		}
 		return (0);
 	}
+	// TODO: Move to another function
 	ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);
 	if (OCL_ERROR(err, "Failed to create kernel"))
 		return (0);

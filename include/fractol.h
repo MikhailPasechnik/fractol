@@ -106,6 +106,7 @@
 # else
 	# define FCL_INCLUDE "-I./res/cl"
 # endif
+// TODO: Compile all kernels at ones
 # define GRADIENTS_TXT "res/gradients.txt"
 # define FCL_SRC "res/cl/complex.cl res/cl/utils.cl"
 # define MANDELBROT_SRC FCL_SRC" res/cl/"MANDELBROT".cl"
