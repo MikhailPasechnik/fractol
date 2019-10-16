@@ -19,7 +19,8 @@ int new_renderer(const char *name, t_renderer *ren, t_ocl *ocl)
 
 	if (!pick_fractal(name, ren))
 	{
-		ft_putendl_fd("Failed to pick fractal", 2);
+		ft_putstr_fd("Failed to pick fractal: ", 2);
+		ft_putendl_fd(name, 2);
 		return (0);
 	}
 	ren->program = ocl_create_program(ocl->context,
