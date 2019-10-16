@@ -24,11 +24,13 @@ char 	*fio_read_file(const char *file_name, size_t *size)
 
     if (!(fd = fio_open_fd(file_name)))
         return (NULL);
-    *size = 0;
+    if (size)
+        *size = 0;
     str = NULL;
     while ((rd = read(fd, buff, 1024)))
     {
-        *size += rd;
+        if (size)
+            *size += rd;
         buff[rd] = '\0';
         joined = ft_strjoin(str ? str : "", buff);
         if (str)
