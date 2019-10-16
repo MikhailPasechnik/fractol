@@ -43,9 +43,7 @@ __kernel void julia(
 //		z.r = sin(z.r) + z.r;
 		i++;
 	}
-    double modulus = sqrt(z.r*z.r + z.i*z.i);
-    double mu = i + 1 - (log(log(modulus))) / log (2.0);
-//
-//    printf("%lf\n", mu);
-    result[id] = iteration_to_color(mu, iterations, gradient, gradient_len);
+    result[id] = iteration_to_color(
+        smooth_iteration(i, z.r, z.i), iterations, gradient, gradient_len
+    );
 }

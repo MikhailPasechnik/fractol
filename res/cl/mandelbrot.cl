@@ -32,10 +32,12 @@ __kernel void mandelbrot(
 	i = 0;
 	c = (t_complex){point.x, point.y};
 	z = c;
-	while (c_abs(z).r <= 2 && i < iterations)
+	while (c_abs(z).r < 4 && i < iterations)
 	{
 		z = c_add(c_mul(z, z), c);
 		i++;
 	}
-	result[id] = iteration_to_color(i, iterations, gradient, gradient_len);
+	result[id] = iteration_to_color(
+        smooth_iteration(i, z.r, z.i), iterations, gradient, gradient_len
+    );
 }

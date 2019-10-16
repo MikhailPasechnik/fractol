@@ -35,7 +35,7 @@ __kernel void burning_ship(
 	z = c;
 
 	double temp;
-	while (c_abs(z).r <= 2 && i < iterations)
+	while (c_abs(z).r < 4 && i < iterations)
 	{
 		power = 2;
 		temp = z.r * z.r - z.i * z.i + c.r;
@@ -43,10 +43,7 @@ __kernel void burning_ship(
 		z.r = fabs(temp);
 		i++;
 	}
-    double modulus = sqrt(z.r*z.r + z.i*z.i);
-    double mu = i + 1 - (log(log(modulus))) / log (2.0);
-    //
-    //    printf("%lf\n", mu);
-    result[id] = iteration_to_color(mu, iterations, gradient, gradient_len);
-
+    result[id] = iteration_to_color(
+        smooth_iteration(i, z.r, z.i), iterations, gradient, gradient_len
+    );
 }
