@@ -100,27 +100,24 @@
 ** Usage
 */
 # define HELP_ARG "help"
-# define USAGE "./fractol "HELP_ARG
-# define HELP "./fractol mandelbrot | julia"
+# define FRACTALS "mandelbrot, julia, burning_ship"
+# define HELP "./fractol "FRACTALS" [gradient: r g b p, ..]"
 
 
 /*
 ** Fractal source setup
 */
-# define MANDELBROT "mandelbrot"
-# define BURNING_SHIP "burning_ship"
-# define JULIA "julia"
 # ifdef __APPLE__
 	# define FCL_INCLUDE "-I res/cl"
 # else
 	# define FCL_INCLUDE "-I./res/cl"
 # endif
-// TODO: Compile all kernels at ones
 # define GRADIENTS_TXT "res/gradients.txt"
-# define FCL_SRC "res/cl/complex.cl res/cl/utils.cl"
-# define MANDELBROT_SRC FCL_SRC" res/cl/"MANDELBROT".cl"
-# define JULIA_SRC FCL_SRC" res/cl/"JULIA".cl"
-# define BURNING_SHIP_SRC FCL_SRC" res/cl/"BURNING_SHIP".cl"
+# define M_SRC " res/cl/mandelbrot.cl "
+# define J_SRC " res/cl/julia.cl "
+# define B_SRC " res/cl/burning_ship.cl "
+# define F_SRC " res/cl/complex.cl res/cl/utils.cl "
+# define SRC F_SRC M_SRC J_SRC B_SRC
 
 typedef struct	s_renderer
 {
@@ -186,20 +183,18 @@ int             app_render(t_app *app);
 /*
 ** Render functions
 */
-int				new_renderer(const char *name, t_renderer *ren, t_ocl *ocl);
+int				new_renderer(t_renderer *ren, t_ocl *ocl);
 void			delete_renderer(t_renderer *ren);
 int				render(t_renderer *ren, t_ocl *ocl, cl_int *result);
 int             set_gradient(t_renderer *ren, t_ocl *ocl,
         cl_uchar4 *gradient, cl_uint gradient_len);
-
+int             set_kernel(const char *kernel_name, t_renderer *ren);
 
 /*
 ** Utils functions
 */
 size_t			tab_len(char **tab);
 void            *tab_free(char **tab);
-int				pick_fractal(const char *name, t_renderer *ren);
-
 
 /*
 ** Event functions

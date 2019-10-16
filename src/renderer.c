@@ -12,17 +12,31 @@
 
 #include "fractol.h"
 
-int new_renderer(const char *name, t_renderer *ren, t_ocl *ocl)
+int set_kernel(const char *kernel_name, t_renderer *ren)
+{
+    int         err;
+    cl_kernel   k;
+    char        *name;
+
+    k = clCreateKernel(ren->program, kernel_name, &err);
+    if (OCL_ERROR(err, "Failed to create kernel"))
+        return (0);
+    if ((name = ft_strdup(kernel_name)) == NULL)
+        return (0);
+    ren->kernel_name ? free(ren->kernel_name) : 0;
+    ren->kernel_name = name;
+    ren->kernel ? clReleaseKernel(ren->kernel) : 0;
+    ren->kernel = k;
+    return (1);
+}
+
+int new_renderer(t_renderer *ren, t_ocl *ocl)
 {
 	int			err;
 	char        *log;
 
-	if (!pick_fractal(name, ren))
-	{
-		ft_putstr_fd("Failed to pick fractal: ", 2);
-		ft_putendl_fd(name, 2);
-		return (0);
-	}
+    ren->src = ft_strsplit_any(SRC, " \n");
+    ren->src_count = tab_len(ren->src);
 	ren->program = ocl_create_program(ocl->context,
 			(const char **)ren->src, ren->src_count);
 	if (!ren->program || OCL_ERROR(clBuildProgram(
@@ -38,9 +52,6 @@ int new_renderer(const char *name, t_renderer *ren, t_ocl *ocl)
 		return (0);
 	}
 	// TODO: Move to another function
-	ren->kernel = clCreateKernel(ren->program, ren->kernel_name, &err);
-	if (OCL_ERROR(err, "Failed to create kernel"))
-		return (0);
 	ren->queue = clCreateCommandQueue(ocl->context,
 			ocl->device, 0, &err);
 	if (OCL_ERROR(err, "Failed to create queue"))

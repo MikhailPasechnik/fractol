@@ -70,8 +70,10 @@ int		app_start(t_app *app, const char *fractal_name, void *mlx, const char *cust
 	app->custom_gradient = custom_gradients;
 	if (!(ocl_init(&app->ocl)))
         return (app_error(app, "Failed to initialise OpenCL"));
-	if (!new_renderer(fractal_name, &app->ren, &app->ocl))
-        return (app_error(app, "Failed to create renderer"));
+	if (!new_renderer(&app->ren, &app->ocl))
+        return (app_error(app,  "Failed to create renderer"));
+	if (!set_kernel(fractal_name, &app->ren))
+        return (app_error(app, HELP));
 	if (!app_init_gradients(app))
         return (app_error(app, "Failed to create gradients"));
 	if (!(app->win = mlx_new_window(app->mlx, app->win_w, app->win_h,

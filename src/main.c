@@ -18,9 +18,7 @@ int main(int argc, char **argv)
 	t_app   app;
 	void    *mlx;
 
-	if (argc < 2 || argc > 3)
-		ft_putendl(USAGE);
-	else if (ft_strcmp(argv[1], HELP_ARG) == 0)
+	if (argc < 2 || argc > 3 || (ft_strcmp(argv[1], HELP_ARG) == 0))
 		ft_putendl(HELP);
 	else
 	{
@@ -33,7 +31,7 @@ int main(int argc, char **argv)
 			app_finish(&app);
 		else
 		{
-			mlx_loop(mlx);
+            mlx_loop(mlx);
 			app_finish(&app);
 		}
 		free(mlx);
