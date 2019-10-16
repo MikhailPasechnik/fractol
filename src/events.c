@@ -14,7 +14,7 @@ int     on_mouse_wheel(int btn, int x, int y, t_app *app)
 {
 	if (!(btn == 4 || btn == 5))
 		return (1);
-	app->ren.zoom += (btn == 4 ? 1.0 : -1.0) * 4.0 * app->ren.zoom / 10.0;
+	app->ren.zoom += (btn == 4 ? 1.0 : -1.0) * 4.0 * app->ren.zoom / 100.0;
 	app->ren.zoom = app->ren.zoom > 0 ? app->ren.zoom : 1;
 	app_render(app);
 	return (1);
@@ -24,7 +24,7 @@ static int		on_key_press2(int key, t_app *app, int *update)
 {
     if (key == KEY_O || key == KEY_I)
     {
-        app->ren.zoom += (key == XK_i ? 1.0 : -1.0) * 4.0 * app->ren.zoom / 10.0;
+        app->ren.zoom += (key == XK_i ? 1.0 : -1.0) * 4.0 * app->ren.zoom / 100.0;
         app->ren.zoom = app->ren.zoom > 0 ? app->ren.zoom : 1;
         *update = 1;
     }
@@ -72,12 +72,12 @@ int     on_key_press(int key, t_app *app)
 	}
 	else if (key == KEY_LEFT || key == KEY_RIGHT)
 	{
-		app->ren.offset_x += (key == KEY_RIGHT ? 10.0l : -10.0l) / app->ren.zoom;
+		app->ren.offset_x += (key == KEY_RIGHT ? 3.0l : -3.0l) / app->ren.zoom;
 		update = 1;
 	}
 	else if (key == KEY_DOWN || key == KEY_UP)
 	{
-		app->ren.offset_y += (key == KEY_UP ? 10 : -10.0l) / app->ren.zoom;
+		app->ren.offset_y += (key == KEY_UP ? 3.0l : -3.0l) / app->ren.zoom;
 		update = 1;
 	}
 	on_key_press1(key, app, &update);
