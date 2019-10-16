@@ -71,6 +71,8 @@ inline void     gradient_add(t_gradient **list, t_gradient *g)
 {
     if (g && list)
     {
+        while (g->next)
+            g = g->next;
         g->next = *list;
         *list = g;
     }
