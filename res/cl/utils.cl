@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "utils.hcl"
 
 int	iteration_to_color(double iteration, double iteration_max, __global uchar4 *gradient, uint gradient_len)
 {

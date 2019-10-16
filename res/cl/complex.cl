@@ -1,4 +1,4 @@
-#include "complex.h"
+#include "complex.hcl"
 
 inline t_complex c_add(t_complex a, t_complex b)
 {
