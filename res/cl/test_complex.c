@@ -1,4 +1,4 @@
-#include "complex.h"
+#include "complex.hcl"
 
 __kernel void	test_complex(void)
 {

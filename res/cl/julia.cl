@@ -1,5 +1,5 @@
-#include "complex.h"
-#include "utils.h"
+#include "complex.hcl"
+#include "utils.hcl"
 
 __kernel void julia(
 		const float zoom,
