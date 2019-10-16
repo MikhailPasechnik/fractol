@@ -4,8 +4,6 @@
 #else
 	# include <CL/opencl.h>
 #endif
-# include <fcntl.h>
-# include <errno.h>
 # include "libft.h"
 
 # define OCL_H
