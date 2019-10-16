@@ -46,6 +46,8 @@ int     app_init_gradients(t_app *app)
     if((gradients = fio_read_file(GRADIENTS_TXT, NULL)) == NULL)
         return (0);
     app->gradients = gradients_from_str(gradients);
+    if (app->custom_gradient)
+        gradient_add(&app->gradients, gradients_from_str((char *)app->custom_gradient));
     free(gradients);
     if (!app->gradients)
         return (0);
@@ -59,12 +61,13 @@ int     app_error(t_app* app, char *msg)
     return (0);
 }
 
-int		app_start(t_app *app, const char *fractal_name, void *mlx)
+int		app_start(t_app *app, const char *fractal_name, void *mlx, const char *custom_gradients)
 {
 	ft_bzero(app, sizeof(t_app));
 	app->win_h = WIN_HEIGHT;
 	app->win_w = WIN_WIDTH;
 	app->mlx = mlx;
+	app->custom_gradient = custom_gradients;
 	if (!(ocl_init(&app->ocl)))
         return (app_error(app, "Failed to initialise OpenCL"));
 	if (!new_renderer(fractal_name, &app->ren, &app->ocl))

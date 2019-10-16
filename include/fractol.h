@@ -49,6 +49,7 @@
 	# define KEY_8 28
 	# define KEY_9 25
 	# define KEY_0 29
+    # define KEY_G 25
 
 	# define KEY_UP 125
 	# define KEY_LEFT 123
@@ -155,6 +156,7 @@ typedef struct	s_app
 	t_renderer			ren;
 	t_ocl				ocl;
 
+	const char                *custom_gradient;
 	t_gradient          *gradients;
 	t_gradient          *gradients_head;
 
@@ -165,7 +167,7 @@ typedef struct	s_app
 /*
 ** App functions
 */
-int				app_start(t_app *app, const char *fractal_name, void *mlx);
+int		        app_start(t_app *app, const char *fractal_name, void *mlx, const char *custom_gradients);
 void			app_finish(t_app *app);
 int             app_render(t_app *app);
 
