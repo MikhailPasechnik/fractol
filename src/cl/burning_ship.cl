@@ -43,5 +43,10 @@ __kernel void burning_ship(
 		z.r = fabs(temp);
 		i++;
 	}
-	result[id] = iteration_to_color(i, iterations, gradient, gradient_len);
+    double modulus = sqrt(z.r*z.r + z.i*z.i);
+    double mu = i + 1 - (log(log(modulus))) / log (2.0);
+    //
+    //    printf("%lf\n", mu);
+    result[id] = iteration_to_color(mu, iterations, gradient, gradient_len);
+
 }

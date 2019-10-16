@@ -9,13 +9,13 @@ typedef struct  s_gradient
 {
     cl_uchar4   *data;
     cl_uint     len;
-    t_gradient  *head;
     t_gradient  *next;
 }               t_gradient;
 
-void            gradient_add(t_gradient **list, cl_uchar4 *data, cl_uint len);
+void            gradient_add(t_gradient **list, t_gradient *g);
 t_gradient      *gradient_from_str(char *str);
-void            *free_gradient_list(t_gradient *list);
+t_gradient      *gradients_from_str(char *str);
+void            *free_gradient_list(t_gradient **list);
 
 
 #endif

@@ -20,8 +20,8 @@
 # include "mlx.h"
 # include "gradient.h"
 
-# define WIN_WIDTH 1920
-# define WIN_HEIGHT 1080
+# define WIN_WIDTH 800
+# define WIN_HEIGHT 500
 # define ITERATIONS 50
 # define ZOOM 1
 
@@ -75,7 +75,7 @@
 	# define KEY_8 XK_8
 	# define KEY_9 XK_9
 	# define KEY_0 XK_0
-	# define KEY_G XK_G
+	# define KEY_G XK_g
 
 	# define KEY_UP XK_Up
 	# define KEY_LEFT XK_Left
@@ -97,6 +97,7 @@
 ** Fractal source setup
 */
 # define MANDELBROT "mandelbrot"
+# define BURNING_SHIP "burning_ship"
 # define JULIA "julia"
 # ifdef __APPLE__
 	# define FCL_INCLUDE "-I src/cl"
@@ -106,6 +107,7 @@
 # define FCL_SRC "src/cl/complex.cl src/cl/utils.cl"
 # define MANDELBROT_SRC FCL_SRC" src/cl/"MANDELBROT".cl"
 # define JULIA_SRC FCL_SRC" src/cl/"JULIA".cl"
+# define BURNING_SHIP_SRC FCL_SRC" src/cl/"BURNING_SHIP".cl"
 
 typedef struct	s_renderer
 {
@@ -152,6 +154,7 @@ typedef struct	s_app
 	t_ocl				ocl;
 
 	t_gradient          *gradients;
+	t_gradient          *gradients_head;
 
 	long long           time;
     void (*animation_callback)(struct s_app *);

@@ -48,7 +48,10 @@ int				pick_fractal(const char *name, t_renderer *ren)
 		set_fractal(MANDELBROT, MANDELBROT_SRC, ren);
 	else if (ft_strcmp(name, JULIA) == 0)
 		set_fractal(JULIA, JULIA_SRC, ren);
+	else if (ft_strcmp(name, BURNING_SHIP) == 0)
+		set_fractal(BURNING_SHIP, BURNING_SHIP_SRC, ren);
 	else
 		return (0);
 	return (ren->kernel_name && ren->src && ren->src_count);
 }
+
