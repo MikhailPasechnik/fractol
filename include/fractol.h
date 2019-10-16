@@ -16,6 +16,7 @@
 # include <math.h>
 # include <stdio.h>
 # include "libft.h"
+# include "file_io.h"
 # include "ocl.h"
 # include "mlx.h"
 # include "gradient.h"
@@ -100,14 +101,14 @@
 # define BURNING_SHIP "burning_ship"
 # define JULIA "julia"
 # ifdef __APPLE__
-	# define FCL_INCLUDE "-I src/cl"
+	# define FCL_INCLUDE "-I res/cl"
 # else
-	# define FCL_INCLUDE "-I./src/cl"
+	# define FCL_INCLUDE "-I./res/cl"
 # endif
-# define FCL_SRC "src/cl/complex.cl src/cl/utils.cl"
-# define MANDELBROT_SRC FCL_SRC" src/cl/"MANDELBROT".cl"
-# define JULIA_SRC FCL_SRC" src/cl/"JULIA".cl"
-# define BURNING_SHIP_SRC FCL_SRC" src/cl/"BURNING_SHIP".cl"
+# define FCL_SRC "res/cl/complex.cl res/cl/utils.cl"
+# define MANDELBROT_SRC FCL_SRC" res/cl/"MANDELBROT".cl"
+# define JULIA_SRC FCL_SRC" res/cl/"JULIA".cl"
+# define BURNING_SHIP_SRC FCL_SRC" res/cl/"BURNING_SHIP".cl"
 
 typedef struct	s_renderer
 {
