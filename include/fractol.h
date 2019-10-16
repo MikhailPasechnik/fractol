@@ -20,6 +20,7 @@
 # include "ocl.h"
 # include "mlx.h"
 # include "gradient.h"
+# include "ft_printf.h"
 
 # define WIN_WIDTH 800
 # define WIN_HEIGHT 500
@@ -49,7 +50,11 @@
 	# define KEY_8 28
 	# define KEY_9 25
 	# define KEY_0 29
+
     # define KEY_G 25
+    # define KEY_O XK_o
+    # define KEY_I XK_i
+    # define KEY_S XK_s
 
 	# define KEY_UP 125
 	# define KEY_LEFT 123
@@ -77,7 +82,11 @@
 	# define KEY_8 XK_8
 	# define KEY_9 XK_9
 	# define KEY_0 XK_0
+
 	# define KEY_G XK_g
+    # define KEY_O XK_o
+    # define KEY_I XK_i
+    # define KEY_S XK_s
 
 	# define KEY_UP XK_Up
 	# define KEY_LEFT XK_Left
@@ -162,6 +171,7 @@ typedef struct	s_app
 	t_gradient          *gradients_head;
 
 	long long           time;
+	long long           mouse_move_timestamp;
     void (*animation_callback)(struct s_app *);
 }				t_app;
 
