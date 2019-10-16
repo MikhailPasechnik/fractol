@@ -35,13 +35,12 @@ __kernel void julia(
 		mouse_y / ((double)width / 2)
 	};
 	z = (t_complex){point.x, point.y};
-	while (c_abs(z).r <= 2 && i < iterations)
+	while (c_abs(z).r < 4 && i < iterations)
 	{
-	    z = c_mul(z, z);
 	    z = c_mul(z, z);
 		z = c_add(z, c);
 		z.i = tan(z.i) + z.i;
-		z.r = sin(z.r) + z.r;
+//		z.r = sin(z.r) + z.r;
 		i++;
 	}
     double modulus = sqrt(z.r*z.r + z.i*z.i);

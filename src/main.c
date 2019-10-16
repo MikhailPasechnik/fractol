@@ -18,7 +18,7 @@ int main(int argc, char **argv)
 	t_app   app;
 	void    *mlx;
 
-	if (argc < 2 || argc > 2)
+	if (argc < 2 || argc > 3)
 		ft_putendl(USAGE);
 	else if (ft_strcmp(argv[1], HELP_ARG) == 0)
 		ft_putendl(HELP);
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 			ft_putendl_fd("Failed to initialise mlx", 2);
 			exit(1);
 		}
-		if (!app_start(&app, argv[1], mlx))
+		if (!app_start(&app, argv[1], mlx, argc == 3 ? argv[2] : NULL))
 			app_finish(&app);
 		else
 		{
