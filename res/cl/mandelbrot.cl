@@ -2,24 +2,24 @@
 #include "utils.hcl"
 
 __kernel void mandelbrot(
-		const float zoom,
-		const float mouse_x,
-		const float mouse_y,
-		const double offset_x,
-		const double offset_y,
-		const int   width,
-		const int   height,
-		const int   iterations,
-        uint     gradient_len,
-        __global uchar4      *gradient,
-		__global int         *result
+		const float		zoom,
+		const float		mouse_x,
+		const float		mouse_y,
+		const double	offset_x,
+		const double	offset_y,
+		const int		width,
+		const int		height,
+		const int		iterations,
+		uint			gradient_len,
+		__global uchar4	*gradient,
+		__global int	*result
 )
 {
-	int 		i;
-	int         id;
-	t_complex 	c;
-	t_complex 	z;
-	double2     point;
+	int			i;
+	int			id;
+	t_complex	c;
+	t_complex	z;
+	double2		point;
 
 	id = get_global_id(0);
 	point.x = id % width - width  / 2;
@@ -38,6 +38,6 @@ __kernel void mandelbrot(
 		i++;
 	}
 	result[id] = iteration_to_color(
-        smooth_iteration(i, z.r, z.i), iterations, gradient, gradient_len
-    );
+		smooth_iteration(i, z.r, z.i), iterations, gradient, gradient_len
+	);
 }

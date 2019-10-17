@@ -1,6 +1,6 @@
 #include "fractol.h"
 
-int     on_mouse_move(int x, int y, t_app *app)
+int				on_mouse_move(int x, int y, t_app *app)
 {
 	if (app->animation_callback)
 		return (1);
@@ -10,8 +10,10 @@ int     on_mouse_move(int x, int y, t_app *app)
 	return (1);
 }
 
-int     on_mouse_wheel(int btn, int x, int y, t_app *app)
+int				on_mouse_wheel(int btn, int x, int y, t_app *app)
 {
+	(void)x;
+	(void)y;
 	if (!(btn == 4 || btn == 5))
 		return (1);
 	app->ren.zoom += (btn == 4 ? 1.0 : -1.0) * 4.0 * app->ren.zoom / 100.0;
@@ -22,18 +24,21 @@ int     on_mouse_wheel(int btn, int x, int y, t_app *app)
 
 static int		on_key_press2(int key, t_app *app, int *update)
 {
-    if (key == KEY_O || key == KEY_I)
-    {
-        app->ren.zoom += (key == XK_i ? 1.0 : -1.0) * 4.0 * app->ren.zoom / 100.0;
-        app->ren.zoom = app->ren.zoom > 0 ? app->ren.zoom : 1;
-        *update = 1;
-    }
-    else if (key == KEY_S)
-        if (!save_image(app->ren.kernel_name, app->pixel_ptr, app->win_w, app->win_h))
-            ft_fprintf(2, "Failed to save image\n");
-        else
-            ft_printf("Fractal saved to: %s.pgm\n", app->ren.kernel_name);
-    return (1);
+	if (key == KEY_O || key == KEY_I)
+	{
+		app->ren.zoom += (key == XK_i ? 1.0 : -1.0)
+				* 4.0 * app->ren.zoom / 100.0;
+		app->ren.zoom = app->ren.zoom > 0 ? app->ren.zoom : 1;
+		*update = 1;
+	}
+	else if (key == KEY_S)
+		if (!save_image(
+				app->ren.kernel_name, app->pixel_ptr, app->win_w, app->win_h)
+		)
+			ft_fprintf(2, "Failed to save image\n");
+		else
+			ft_printf("Fractal saved to: %s.pgm\n", app->ren.kernel_name);
+	return (1);
 }
 
 static int		on_key_press1(int key, t_app *app, int *update)
@@ -46,21 +51,22 @@ static int		on_key_press1(int key, t_app *app, int *update)
 		app->animation_callback = julia_animation_callback1;
 	else if (key == KEY_3)
 		app->animation_callback = julia_animation_callback2;
-    else if (key == KEY_G)
-    {
-        if (!app->gradients->next)
-            app->gradients = app->gradients_head;
-        else
-            app->gradients = app->gradients->next;
-        set_gradient(&app->ren, &app->ocl, app->gradients->data, app->gradients->len);
-        *update = 1;
-    }
+	else if (key == KEY_G)
+	{
+		if (!app->gradients->next)
+			app->gradients = app->gradients_head;
+		else
+			app->gradients = app->gradients->next;
+		set_gradient(&app->ren, &app->ocl, app->gradients->data,
+				app->gradients->len);
+		*update = 1;
+	}
 	return (on_key_press2(key, app, update));
 }
 
-int     on_key_press(int key, t_app *app)
+int				on_key_press(int key, t_app *app)
 {
-	int update;
+	int	update;
 
 	update = 0;
 	if (key == KEY_ESC)

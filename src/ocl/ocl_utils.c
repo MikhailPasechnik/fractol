@@ -1,15 +1,15 @@
 #include "ocl.h"
 
-void	ocl_release(t_ocl *cl)
+void		ocl_release(t_ocl *cl)
 {
 	if (cl->context != NULL)
 		clReleaseContext(cl->context);
 }
 
-char	*ocl_get_build_log(cl_program program, cl_device_id device_id)
+char		*ocl_get_build_log(cl_program program, cl_device_id device_id)
 {
 	size_t	size;
-	char 	*log;
+	char	*log;
 
 	clGetProgramBuildInfo(program, device_id, CL_PROGRAM_BUILD_LOG, 0, NULL, &size);
 	if ((log = ft_strnew(size)) == NULL)
@@ -18,9 +18,9 @@ char	*ocl_get_build_log(cl_program program, cl_device_id device_id)
 	return (log);
 }
 
-void	ocl_log_program_build(cl_program program, cl_device_id device_id, int fd)
+void		ocl_log_program_build(cl_program program, cl_device_id device_id, int fd)
 {
-	char *log;
+	char	*log;
 
 	log = ocl_get_build_log(program, device_id);
 	if (log)
@@ -30,7 +30,7 @@ void	ocl_log_program_build(cl_program program, cl_device_id device_id, int fd)
 	}
 }
 
-int		ocl_put_error(int err, const char *msg, const char *file, int line)
+int			ocl_put_error(int err, const char *msg, const char *file, int line)
 {
 	ft_putstr_fd("opencl: ", 2);
 	ft_putstr_fd(msg ? msg : "error", 2);
@@ -39,6 +39,7 @@ int		ocl_put_error(int err, const char *msg, const char *file, int line)
 	ft_putstr_fd(":", 2);
 	ft_putnbr_fd(line, 2);
 	ft_putstr_fd(" ", 2);
-	ft_putendl_fd(ocl_get_error_string(err), 2);
+	ft_putnbr_fd(err, 2);
+	ft_putchar_fd('\n', 2);
 	return (1);
 }

@@ -12,25 +12,23 @@
 
 #include "fractol.h"
 
-size_t			tab_len(char **tab)
+size_t	tab_len(char **tab)
 {
-	size_t len;
+	size_t	len;
 
 	len = 0;
 	while (tab && tab[len])
-	{
 		len++;
-	}
 	return (len);
 }
 
-void            *tab_free(char **tab)
+void	*tab_free(char **tab)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (tab[i])
-        free(tab[i++]);
-    free(tab);
-    return (NULL);
+	i = 0;
+	while (tab[i])
+		free(tab[i++]);
+	free(tab);
+	return (NULL);
 }

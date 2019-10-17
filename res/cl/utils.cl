@@ -1,53 +1,49 @@
 #include "utils.hcl"
 
-double smooth_iteration(double iterations, double r, double i)
+double				smooth_iteration(double iterations, double r, double i)
 {
-    double modulus = sqrt(r * r + i * i);
-    return (iterations + 1 - (log(log(modulus))) / log (2.0));
+	double	modulus;
+
+	modulus = sqrt(r * r + i * i);
+	return (iterations + 1 - (log(log(modulus))) / log (2.0));
 }
-int	iteration_to_color(double iteration, double iteration_max, __global uchar4 *gradient, uint gradient_len)
+
+static inline void	get_gradient_range(double pos, __global uchar4 *gradient, uint gradient_len, uint *a, uint *b)
 {
-	int hsv_[3];
-    //	hsv_to_rgb(
-    //		360 * iteration / iteration_max,
-    //		255,
-    //		iteration < iteration_max ? (float)iteration / iteration_max + 100: 0,
-    //		hsv
-    //	);
-    if (iteration > iteration_max)
-        return (0);
+	uint	i;
 
-    iteration = iteration_max - iteration;
-    uint i;
-    uint a;
-    uint b;
-    double w;
+	*a = 0;
+	*b = 1;
+	i = 0;
+	while (i < gradient_len - 1)
+	{
+		if (pos > gradient[*b].w)
+		{
+			(*a)++;
+			(*b)++;
+		}
+		else
+			break;
+		i++;
+	}
+}
 
-    // Fit in [0, 100]
-    w = iteration/iteration_max * 100;
+int					iteration_to_color(double iteration, double iteration_max,
+			__global uchar4 *gradient, uint gradient_len)
+{
+	int			rgb[3];
+	uint		a;
+	uint		b;
+	double		alpha;
 
-    a = 0;
-    b = 1;
-    i = 0;
-    while (i < gradient_len - 1)
-    {
-        if (w > gradient[b].w)
-        {
-            a++;
-            b++;
-        }
-        else
-            break;
-
-        i++;
-    }
-
-    double alpha = (gradient[a].w - w) / (gradient[a].w - gradient[b].w);
-
-    hsv_[0] = mix((double)gradient[a].x, (double)gradient[b].x, alpha);
-    hsv_[1] = mix((double)gradient[a].y, (double)gradient[b].y, alpha);
-    hsv_[2] = mix((double)gradient[a].z, (double)gradient[b].z, alpha);
-
-//            printf("alpha: %lf\n", alpha);
-    return ((((hsv_[0] << 8u) + hsv_[1]) << 8u) + hsv_[2]);
+	if (iteration > iteration_max)
+		return (0);
+	iteration = iteration_max - iteration;
+	iteration = iteration / iteration_max * 100;
+	get_gradient_range(iteration, gradient, gradient_len, &a, &b);
+	alpha = (gradient[a].w - iteration) / (gradient[a].w - gradient[b].w);
+	rgb[0] = mix((double)gradient[a].x, (double)gradient[b].x, alpha);
+	rgb[1] = mix((double)gradient[a].y, (double)gradient[b].y, alpha);
+	rgb[2] = mix((double)gradient[a].z, (double)gradient[b].z, alpha);
+	return ((((rgb[0] << 8u) + rgb[1]) << 8u) + rgb[2]);
 }

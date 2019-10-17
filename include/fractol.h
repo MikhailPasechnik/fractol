@@ -32,7 +32,7 @@
 ** Key codes
 */
 # ifdef __APPLE__
-    # define APPLE 1
+	# define APPLE 1
 	# define X_ON_KEY 2, 0
 	# define X_ON_MOUSE_MOVE 6, 0
 	# define X_ON_MOUSE_WHEEL 4, 0
@@ -51,10 +51,10 @@
 	# define KEY_9 25
 	# define KEY_0 29
 
-    # define KEY_G 25
-    # define KEY_O XK_o
-    # define KEY_I XK_i
-    # define KEY_S XK_s
+	# define KEY_G 25
+	# define KEY_O XK_o
+	# define KEY_I XK_i
+	# define KEY_S XK_s
 
 	# define KEY_UP 125
 	# define KEY_LEFT 123
@@ -62,7 +62,7 @@
 	# define KEY_DOWN 126
 	# define KEY_ESC 53
 # else
-    # define APPLE 0
+	# define APPLE 0
 	# include <X11/X.h>
 	# include <X11/keysym.h>
 	# define X_ON_KEY KeyPress, KeyPressMask
@@ -84,9 +84,9 @@
 	# define KEY_0 XK_0
 
 	# define KEY_G XK_g
-    # define KEY_O XK_o
-    # define KEY_I XK_i
-    # define KEY_S XK_s
+	# define KEY_O XK_o
+	# define KEY_I XK_i
+	# define KEY_S XK_s
 
 	# define KEY_UP XK_Up
 	# define KEY_LEFT XK_Left
@@ -132,15 +132,15 @@ typedef struct	s_renderer
 	cl_float			zoom;
 	cl_float			mouse_x;
 	cl_float			mouse_y;
-	cl_double	        offset_x;
+	cl_double			offset_x;
 	cl_double			offset_y;
 	cl_int				width;
 	cl_int				height;
 	cl_int				iterations;
 
-	cl_mem              gradient_mem;
-	cl_uchar4           *gradient;
-	cl_uint             gradient_len;
+	cl_mem				gradient_mem;
+	cl_uchar4			*gradient;
+	cl_uint				gradient_len;
 
 
 	cl_mem				out_mem;
@@ -150,34 +150,35 @@ typedef struct	s_renderer
 
 typedef struct	s_app
 {
-	void		        *mlx;
-	void                *win;
-	void                *img;
-	void                *pixel_ptr;
-	int                 bits_per_pixel;
-	int                 size_line;
-	int                 endian;
-	int					win_w;
-	int					win_h;
+	void		*mlx;
+	void		*win;
+	void		*img;
+	void		*pixel_ptr;
+	int			bits_per_pixel;
+	int			size_line;
+	int			endian;
+	int			win_w;
+	int			win_h;
 
-	t_renderer			ren;
-	t_ocl				ocl;
+	t_renderer	ren;
+	t_ocl		ocl;
 
-	const char                *custom_gradient;
-	t_gradient          *gradients;
-	t_gradient          *gradients_head;
+	const char	*custom_gradient;
+	t_gradient	*gradients;
+	t_gradient	*gradients_head;
 
-	long long           time;
-	long long           mouse_move_timestamp;
-    void (*animation_callback)(struct s_app *);
+	long long	time;
+	void		(*animation_callback)(struct s_app *);
 }				t_app;
 
 /*
 ** App functions
 */
-int		        app_start(t_app *app, const char *fractal_name, void *mlx, const char *custom_gradients);
+int				app_start(t_app *app, const char *fractal_name, void *mlx, const char *custom_gradients);
 void			app_finish(t_app *app);
-int             app_render(t_app *app);
+int				app_render(t_app *app);
+int				app_init_gradients(t_app *app);
+void			app_connect_events(t_app *app);
 
 
 /*
@@ -186,29 +187,29 @@ int             app_render(t_app *app);
 int				new_renderer(t_renderer *ren, t_ocl *ocl);
 void			delete_renderer(t_renderer *ren);
 int				render(t_renderer *ren, t_ocl *ocl, cl_int *result);
-int             set_gradient(t_renderer *ren, t_ocl *ocl,
-        cl_uchar4 *gradient, cl_uint gradient_len);
-int             set_kernel(const char *kernel_name, t_renderer *ren);
+int				set_gradient(t_renderer *ren, t_ocl *ocl,
+	cl_uchar4 *gradient, cl_uint gradient_len);
+int				set_kernel(const char *kernel_name, t_renderer *ren);
 
 /*
 ** Utils functions
 */
 size_t			tab_len(char **tab);
-void            *tab_free(char **tab);
+void			*tab_free(char **tab);
 
 /*
 ** Event functions
 */
-int     on_mouse_move(int x, int y, t_app *app);
-int     on_mouse_wheel(int btn, int x, int y, t_app *app);
-int     on_key_press(int key, t_app *app);
+int				on_mouse_move(int x, int y, t_app *app);
+int				on_mouse_wheel(int btn, int x, int y, t_app *app);
+int				on_key_press(int key, t_app *app);
 
 /*
 ** Animation bonus
 */
-int     animation_loop_callback(t_app *app);
-void    julia_animation_callback(t_app  *app);
-void    julia_animation_callback1(t_app  *app);
-void    julia_animation_callback2(t_app  *app);
+int				animation_loop_callback(t_app *app);
+void			julia_animation_callback(t_app  *app);
+void			julia_animation_callback1(t_app  *app);
+void			julia_animation_callback2(t_app  *app);
 
 #endif

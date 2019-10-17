@@ -4,7 +4,7 @@
 cl_program		ocl_create_program(cl_context ctx, const char **file_names, size_t count)
 {
 	cl_program	program;
-	char 		**content;
+	char		**content;
 	cl_int		err;
 	size_t 		*size;
 
