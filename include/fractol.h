@@ -100,7 +100,7 @@
 ** Usage
 */
 # define HELP_ARG "help"
-# define FRACTALS "mandelbrot, julia, burning_ship"
+# define FRACTALS "mandelbrot, julia, burning_ship, knight"
 # define HELP "./fractol "FRACTALS" [gradient: r g b p, ..]"
 
 
@@ -115,9 +115,10 @@
 # define GRADIENTS_TXT "res/gradients.txt"
 # define M_SRC " res/cl/mandelbrot.cl "
 # define J_SRC " res/cl/julia.cl "
+# define K_SRC " res/cl/knight.cl "
 # define B_SRC " res/cl/burning_ship.cl "
 # define F_SRC " res/cl/complex.cl res/cl/utils.cl "
-# define SRC F_SRC M_SRC J_SRC B_SRC
+# define SRC F_SRC M_SRC J_SRC B_SRC K_SRC
 
 typedef struct	s_renderer
 {
