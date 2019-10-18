@@ -19,7 +19,7 @@ int			set_kernel(const char *kernel_name, t_renderer *ren)
 	char		*name;
 
 	k = clCreateKernel(ren->program, kernel_name, &err);
-	if (OCL_ERROR(err, "Failed to create kernel"))
+	if (err != CL_SUCCESS)
 		return (0);
 	if ((name = ft_strdup(kernel_name)) == NULL)
 		return (0);

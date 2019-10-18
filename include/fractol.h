@@ -93,7 +93,7 @@
 */
 # define HELP_ARG "help"
 # define FRACTALS "mandelbrot, julia, burning_ship, knight, celtic"
-# define HELP "./fractol "FRACTALS" [gradient: r g b p, ..]"
+# define HELP "./fractol ["FRACTALS"] [gradient: r g b p, ..]"
 
 /*
 ** Fractal source setup
