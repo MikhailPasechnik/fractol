@@ -17,21 +17,27 @@ CC			=	gcc
 CFLAGS		=	-Wall -Wextra -Werror
 
 SRC_FILES	=			\
-	main.c 				\
-	app.c 				\
-	events.c 			\
-	renderer.c 			\
-	utils.c 			\
+	animation.c			\
+	app.c				\
+	app_utils.c			\
+	events.c			\
+	file_io.c			\
+	gradient.c			\
+	gradient_utils.c	\
+	main.c				\
+	renderer.c			\
+	renderer_utils.c	\
+	utils.c				\
 	ocl/ocl_error.c  	\
 	ocl/ocl_init.c  	\
 	ocl/ocl_program.c  	\
 	ocl/ocl_utils.c
 
 HDR_FILES	=			\
-	fractol.h 			\
-	keys.h 				\
+	file_io.h			\
+	fractol.h			\
+	gradient.h			\
 	ocl.h
-
 
 DIR_SRC		=	./src
 DIR_INC		=	./include
@@ -40,18 +46,15 @@ DIR_OBJ		=	./obj
 LIBFT		=	./libft/libft.a
 LIBFT_DIR	=	./libft
 
-SDL_DIR		=	./SDL
-SDL_DIST	=	$(PWD)/SDL/dist
-SDL_INCLUDE =	$(SDL_DIR)/dist/include/SDL2
-SDL_LINK	=	`$(SDL_DIST)/bin/sdl2-config --cflags --libs`
-
+FT_PRINTF		=	./ft_printf/libftprintf.a
+FT_PRINTF_DIR	=	./ft_printf
 
 SRC			=	$(addprefix $(DIR_SRC)/, $(SRC_FILES))
 HDR			=	$(addprefix $(DIR_INC)/, $(HDR_FILES))
 OBJ			=	$(addprefix $(DIR_OBJ)/, $(SRC_FILES:.c=.o))
 
-INCLUDES	=	-I $(LIBFT_DIR) -I $(DIR_INC) -I $(SDL_INCLUDE)
-LIBS		:=	./libft/libft.a -lm
+INCLUDES	=	-I $(LIBFT_DIR) -I $(FT_PRINTF_DIR)/include -I $(DIR_INC)
+LIBS		:=	./libft/libft.a -lm ./ft_printf/libftprintf.a
 
 ifeq ($(OS),Linux)
 	LIBS	:= $(LIBS) -lOpenCL
@@ -62,7 +65,8 @@ else
 	MINILIBX_DIR=./minilibx_macos
 	MINILIBX_LINK=-L$(MINILIBX_DIR) -lmlx -framework OpenGL -framework AppKit
 endif
-MINILIBX=$(MINILIBX_DIR)/libmix.a
+LIBS	:= $(LIBS) $(MINILIBX_LINK)
+MINILIBX=$(MINILIBX_DIR)/libmlx.a
 
 all: $(NAME)
 
@@ -70,11 +74,11 @@ $(DIR_OBJ):
 	@mkdir $(DIR_OBJ)
 	@mkdir $(DIR_OBJ)/ocl
 
-$(NAME): $(MINILIBX)  $(DIR_OBJ) $(OBJ) $(LIBFT)
+$(NAME): $(MINILIBX)  $(DIR_OBJ) $(OBJ) $(LIBFT) $(FT_PRINTF)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME) $(SDL_LINK)
 
 $(DIR_OBJ)/%.o:$(DIR_SRC)/%.c $(HDR)
-	@$(CC) $(CFLAGS) -c $(INCLUDES) $< -o $@
+	$(CC) $(CFLAGS) -c $(INCLUDES) $< -o $@
 
 $(MINILIBX): FAKE
 	@$(MAKE) -C $(MINILIBX_DIR)/ --no-print-directory
@@ -82,23 +86,19 @@ $(MINILIBX): FAKE
 $(LIBFT): FAKE
 	@$(MAKE) -C $(LIBFT_DIR)/ --no-print-directory
 
-$(SDL_DIST):
-	$(info ************ Compiling SDL *************)
-	$(info --prefix=$(SDL_DIST))
-	mkdir -p $(SDL_DIR)/tmp
-	cd $(SDL_DIR)/tmp; ../configure --prefix=$(SDL_DIST)
-	$(MAKE) -C $(SDL_DIR)/tmp
-	$(MAKE) -C $(SDL_DIR)/tmp install > /dev/null
-	$(info SDL_LINK: $(SDL_LINK))
+$(FT_PRINTF): FAKE
+	@$(MAKE) -C $(FT_PRINTF_DIR)/ --no-print-directory
 
 clean :
 	@/bin/rm -rf $(DIR_OBJ)
-	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory
+	@$(MAKE) -C $(LIBFT_DIR) clean
+	@$(MAKE) -C $(FT_PRINTF_DIR) clean
+	@$(MAKE) -C $(MINILIBX_DIR) clean
 
 fclean : clean
-	/bin/rm -rf $(SDL_DIST) $(SDL_DIR)/tmp
 	@/bin/rm -f $(NAME) $(addprefix tests/test_,$(FILE_NAMES))
-	@$(MAKE) -C $(LIBFT_DIR) fclean --no-print-directory
+	@$(MAKE) -C $(LIBFT_DIR) fclean
+	@$(MAKE) -C $(FT_PRINTF_DIR) fclean
 	@/bin/rm -f $(addprefix tests/,$(TEST_NAMES))
 
 re : fclean all
