@@ -22,9 +22,9 @@
 # include "gradient.h"
 # include "ft_printf.h"
 
-# define WIN_WIDTH 800
-# define WIN_HEIGHT 500
-# define ITERATIONS 50
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
+# define ITERATIONS 60
 # define ZOOM 1
 
 
@@ -51,10 +51,10 @@
 	# define KEY_9 25
 	# define KEY_0 29
 
-	# define KEY_G 25
-	# define KEY_O XK_o
-	# define KEY_I XK_i
-	# define KEY_S XK_s
+	# define KEY_G 5
+	# define KEY_O 31
+	# define KEY_I 34
+	# define KEY_S 1
 
 	# define KEY_UP 125
 	# define KEY_LEFT 123

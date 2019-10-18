@@ -26,7 +26,7 @@ static int		on_key_press2(int key, t_app *app, int *update)
 {
 	if (key == KEY_O || key == KEY_I)
 	{
-		app->ren.zoom += (key == XK_i ? 1.0 : -1.0)
+		app->ren.zoom += (key == KEY_I ? 1.0 : -1.0)
 				* 4.0 * app->ren.zoom / 100.0;
 		app->ren.zoom = app->ren.zoom > 0 ? app->ren.zoom : 1;
 		*update = 1;
