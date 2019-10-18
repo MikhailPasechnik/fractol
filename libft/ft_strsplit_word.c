@@ -6,7 +6,7 @@
 /*   By: bnesoi <bnesoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/13 13:17:16 by bnesoi            #+#    #+#             */
-/*   Updated: 2019/05/10 14:48:48 by bnesoi           ###   ########.fr       */
+/*   Updated: 2019/10/18 09:22:38 by bnesoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static size_t	ft_word_count(const char *str, const char *dl)
 	return (count);
 }
 
-static	void 	*free_res(char **res)
+static void		*free_res(char **res)
 {
 	while (*res)
 	{
