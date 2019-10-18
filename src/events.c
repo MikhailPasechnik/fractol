@@ -91,12 +91,12 @@ int				on_key_press(int key, t_app *app)
 	}
 	else if (key == KEY_LEFT || key == KEY_RIGHT)
 	{
-		app->ren.offset_x += (key == KEY_RIGHT ? 3.0l : -3.0l) / app->ren.zoom;
+		app->ren.offset_x += (key == KEY_RIGHT ? 7.0l : -7.0l) / app->ren.zoom;
 		update = 1;
 	}
 	else if (key == KEY_DOWN || key == KEY_UP)
 	{
-		app->ren.offset_y += (key == KEY_UP ? 3.0l : -3.0l) / app->ren.zoom;
+		app->ren.offset_y += (key == KEY_UP ? 7.0l : -7.0l) / app->ren.zoom;
 		update = 1;
 	}
 	on_key_press1(key, app, &update);
