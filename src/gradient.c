@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gradient.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bnesoi <bnesoi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/18 08:59:20 by bnesoi            #+#    #+#             */
+/*   Updated: 2019/10/18 09:07:34 by bnesoi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
 static cl_uchar4	parse_pnt(char *str)
@@ -68,7 +80,7 @@ t_gradient			*gradient_from_str(char *str)
 	char		**split;
 
 	if (!(g = ft_memalloc(sizeof(t_gradient))))
-		return NULL;
+		return (NULL);
 	ft_bzero(g, sizeof(t_gradient));
 	if (!(split = ft_strsplit(str, ',')))
 		return (free_gradient(&g));

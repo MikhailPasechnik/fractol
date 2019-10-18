@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   events.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bnesoi <bnesoi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/18 08:59:05 by bnesoi            #+#    #+#             */
+/*   Updated: 2019/10/18 09:06:28 by bnesoi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
 int				on_mouse_move(int x, int y, t_app *app)
 {
 	if (app->animation_callback)
 		return (1);
-	app->ren.mouse_x = (app->win_w / 2.0 - x);;
-	app->ren.mouse_y = (app->win_h / 2.0 - y);;
+	app->ren.mouse_x = (app->win_w / 2.0 - x);
+	app->ren.mouse_y = (app->win_h / 2.0 - y);
 	app_render(app);
 	return (1);
 }
@@ -33,8 +45,7 @@ static int		on_key_press2(int key, t_app *app, int *update)
 	}
 	else if (key == KEY_S)
 		if (!save_image(
-				app->ren.kernel_name, app->pixel_ptr, app->win_w, app->win_h)
-		)
+				app->ren.kernel_name, app->pixel_ptr, app->win_w, app->win_h))
 			ft_fprintf(2, "Failed to save image\n");
 		else
 			ft_printf("Fractal saved to: %s.pgm\n", app->ren.kernel_name);

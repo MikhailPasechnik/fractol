@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ocl_init.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bnesoi <bnesoi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/18 08:59:43 by bnesoi            #+#    #+#             */
+/*   Updated: 2019/10/18 09:10:19 by bnesoi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ocl.h"
 
-cl_device_id	ocl_create_device()
+cl_device_id	ocl_create_device(void)
 {
 	cl_platform_id	platform_id;
 	cl_device_id	device_id;
@@ -11,7 +23,8 @@ cl_device_id	ocl_create_device()
 		return (NULL);
 	err = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device_id, NULL);
 	if (err != CL_SUCCESS)
-		err = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_CPU, 1, &device_id, NULL);
+		err = clGetDeviceIDs(
+			platform_id, CL_DEVICE_TYPE_CPU, 1, &device_id, NULL);
 	if (OCL_ERROR(err, "No suitable device found"))
 		return (NULL);
 	return (device_id);
@@ -19,8 +32,9 @@ cl_device_id	ocl_create_device()
 
 int				ocl_init(t_ocl *cl)
 {
-	ft_bzero(cl, sizeof(*cl));
 	cl_int	err;
+
+	ft_bzero(cl, sizeof(*cl));
 	if (!(cl->device = ocl_create_device()))
 		return (0);
 	cl->context = clCreateContext(NULL, 1, &cl->device, NULL, NULL, &err);

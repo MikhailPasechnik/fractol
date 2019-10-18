@@ -6,7 +6,7 @@
 /*   By: bnesoi <bnesoi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/19 12:55:25 by bnesoi            #+#    #+#             */
-/*   Updated: 2019/06/21 12:52:38 by bnesoi           ###   ########.fr       */
+/*   Updated: 2019/10/18 09:09:28 by bnesoi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,15 +91,15 @@ int			render(t_renderer *ren, t_ocl *ocl, cl_int *result)
 	if (!pre_render(ren, ocl) || !set_kernel_args(ren))
 		return (0);
 	size = ren->out_w * ren->out_h;
-	err = clEnqueueNDRangeKernel(ren->queue, ren->kernel,
-			1, NULL, &size, NULL, 0, NULL, NULL);
+	err = clEnqueueNDRangeKernel(
+		ren->queue, ren->kernel, 1, NULL, &size, NULL, 0, NULL, NULL);
 	if (OCL_ERROR(err, "Failed to enqueue kernel!"))
 		return (0);
-	if OCL_ERROR(clFinish(ren->queue), "Failed to finish queue!")
+	if (OCL_ERROR(clFinish(ren->queue), "Failed to finish queue!"))
 		return (0);
 	if (OCL_ERROR(clEnqueueReadBuffer(ren->queue, ren->out_mem, CL_TRUE, 0,
-			sizeof(cl_int) * size, result, 0, NULL, NULL
-			), "Failed to read render output to the surface"))
+			sizeof(cl_int) * size, result, 0, NULL, NULL),
+			"Failed to read render output to the surface"))
 		return (0);
 	return (1);
 }

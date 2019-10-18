@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   file_io.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bnesoi <bnesoi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/18 08:59:10 by bnesoi            #+#    #+#             */
+/*   Updated: 2019/10/18 09:05:33 by bnesoi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "file_io.h"
 
 int			fio_open_fd(const char *file_name)
@@ -51,7 +63,7 @@ int			fio_read_files(const char **file_names, size_t count,
 		!(*size = malloc(sizeof(**size) * count)))
 	{
 		*content ? free(*content) : 0;
-		return 0;
+		return (0);
 	}
 	i = 0;
 	while (i < count)
@@ -60,7 +72,7 @@ int			fio_read_files(const char **file_names, size_t count,
 		{
 			ft_putstr_fd("Failed to read file: ", 2);
 			ft_putendl_fd(file_names[i], 2);
-			while(i--)
+			while (i--)
 				free((*content)[i]);
 			free(*content);
 			free(*size);
@@ -83,7 +95,7 @@ int			save_image(const char *file_name,
 		return (0);
 	ft_sprintf(name, "%s.pgm", file_name);
 	if ((fd = open(name, O_RDWR | O_CREAT, 0666)) == -1)
-		return  (0);
+		return (0);
 	i = 0;
 	ft_fprintf(fd, "P3\n%zu %zu\n255", w, h);
 	while (i < w * h)
