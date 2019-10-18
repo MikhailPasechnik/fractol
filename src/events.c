@@ -44,11 +44,13 @@ static int		on_key_press2(int key, t_app *app, int *update)
 		*update = 1;
 	}
 	else if (key == KEY_S)
+	{
 		if (!save_image(
 				app->ren.kernel_name, app->pixel_ptr, app->win_w, app->win_h))
 			ft_fprintf(2, "Failed to save image\n");
 		else
 			ft_printf("Fractal saved to: %s.pgm\n", app->ren.kernel_name);
+	}
 	return (1);
 }
 
