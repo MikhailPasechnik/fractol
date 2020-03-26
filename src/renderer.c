@@ -37,8 +37,13 @@ int			new_renderer(t_renderer *ren, t_ocl *ocl)
 			ren->program, 0, NULL, FCL_INCLUDE, NULL, NULL),
 					"Failed to build program"))
 		return (log_build_log(ren, ocl));
+	#ifdef CL_VERSION_2_0
+	ren->queue = clCreateCommandQueueWithProperties(ocl->context,
+			ocl->device, 0, &err);
+	#else
 	ren->queue = clCreateCommandQueue(ocl->context,
 			ocl->device, 0, &err);
+	#endif
 	if (OCL_ERROR(err, "Failed to create queue"))
 		return (0);
 	ren->zoom = ZOOM;

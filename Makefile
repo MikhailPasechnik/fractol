@@ -65,6 +65,8 @@ else
 	MINILIBX_DIR=./minilibx_macos
 	MINILIBX_LINK=-L$(MINILIBX_DIR) -lmlx -framework OpenGL -framework AppKit
 endif
+
+INCLUDES:= $(INCLUDES) -I $(MINILIBX_DIR)
 LIBS	:= $(LIBS) $(MINILIBX_LINK)
 MINILIBX=$(MINILIBX_DIR)/libmlx.a
 
